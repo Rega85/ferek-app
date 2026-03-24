@@ -3,6 +3,21 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --color-bg: #FFFFFF;
+  --color-bg-soft: #F5F5F5;
+  --color-text: #0F0F0F;
+  --color-text-muted: #6B7280;
+  --color-accent: #CCFF00;
+  --color-accent-dark: #0F0F0F;
+  --color-danger: #FF3B30;
+  --color-warning: #FF9500;
+  --color-border: #E5E7EB;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --font-display: 'Syne', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
 }
 
 @theme inline {
@@ -12,15 +27,8 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
 }
