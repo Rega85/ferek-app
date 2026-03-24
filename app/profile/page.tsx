@@ -104,7 +104,6 @@ export default function ProfilePage() {
               <h1 className="text-2xl font-display font-bold text-foreground">
                 {user.user_metadata?.full_name || 'Uživatel'}
               </h1>
-              <p className="text-muted-foreground">{user.email}</p>
             </div>
           </div>
 

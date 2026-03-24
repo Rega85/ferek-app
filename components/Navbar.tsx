@@ -82,11 +82,14 @@ export default function Navbar() {
             <div className="relative">
               <button
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex items-center space-x-2 text-muted-foreground hover:text-foreground"
+                className="flex items-center space-x-3 text-muted-foreground hover:text-foreground"
               >
                 <div className="w-8 h-8 bg-accent text-accent-foreground rounded-full flex items-center justify-center font-medium text-sm">
                   {getUserInitials(user)}
                 </div>
+                <span className="font-medium">
+                  {user.user_metadata?.full_name || 'Uživatel'}
+                </span>
                 <svg
                   className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
                   fill="none"

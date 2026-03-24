@@ -112,7 +112,7 @@ export default function RegisterPage() {
 
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-foreground mb-2">
-              Celé jméno *
+              Přezdívka (zobrazí se u inzerátů) *
             </label>
             <input
               id="fullName"
@@ -122,7 +122,7 @@ export default function RegisterPage() {
               onChange={handleChange}
               required
               className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-              placeholder="Jan Novák"
+              placeholder="Vaše přezdívka"
             />
           </div>
 
