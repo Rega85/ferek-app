@@ -11,6 +11,7 @@ type ListingFormData = {
   price: string
   category: string
   city: string
+  isFree: boolean
 }
 
 const CATEGORIES = [
@@ -37,7 +38,8 @@ export default function NewListingPage() {
     description: '',
     price: '',
     category: '',
-    city: ''
+    city: '',
+    isFree: false
   })
   const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -152,7 +154,7 @@ export default function NewListingPage() {
     } else if (step === 2) {
       if (!formData.title.trim()) newErrors.title = 'Název je povinný'
       if (!formData.description.trim()) newErrors.description = 'Popis je povinný'
-      if (!formData.price || parseFloat(formData.price) <= 0) newErrors.price = 'Cena musí být větší než 0'
+      if (!formData.isFree && (!formData.price || parseFloat(formData.price) <= 0)) newErrors.price = 'Cena musí být větší než 0'
       if (!formData.category) newErrors.category = 'Kategorie je povinná'
       if (!formData.city.trim()) newErrors.city = 'Město je povinné'
 
@@ -168,8 +170,13 @@ export default function NewListingPage() {
 
     setSubmitting(true)
     try {
+      console.log('User ID:', user.id)
+      console.log('Form data:', formData)
+
       // Upload photos first
       const uploadedPhotoUrls = await uploadPhotos()
+
+      console.log('Uploaded photos:', uploadedPhotoUrls)
 
       // Create listing
       const { error } = await supabase
@@ -177,13 +184,15 @@ export default function NewListingPage() {
         .insert({
           title: formData.title.trim(),
           description: formData.description.trim(),
-          price: Math.round(parseFloat(formData.price) * 100), // Convert to haléře
+          price: formData.isFree ? 0 : Math.round(parseFloat(formData.price) * 100), // Convert to haléře or 0 for free
           category: formData.category,
-          city: formData.city.trim(),
+          location_city: formData.city.trim(),
           user_id: user.id,
-          photos: uploadedPhotoUrls,
+          images: uploadedPhotoUrls,
           status: 'active'
         })
+
+      console.log('Insert error:', error)
 
       if (error) throw error
 
@@ -361,15 +370,27 @@ export default function NewListingPage() {
                 <input
                   type="number"
                   value={formData.price}
-                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value }))}
+                  onChange={(e) => setFormData(prev => ({ ...prev, price: e.target.value, isFree: false }))}
                   className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[#CCFF00] bg-white ${
                     errors.price ? 'border-red-300' : 'border-gray-300'
                   }`}
                   placeholder="1000"
                   min="0"
                   step="0.01"
+                  disabled={formData.isFree}
                 />
                 {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+                <div className="mt-2">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.isFree}
+                      onChange={(e) => setFormData(prev => ({ ...prev, isFree: e.target.checked, price: e.target.checked ? '0' : prev.price }))}
+                      className="mr-2 h-4 w-4 text-[#CCFF00] focus:ring-[#CCFF00] border-gray-300 rounded"
+                    />
+                    <span className="text-sm text-gray-700">Zdarma</span>
+                  </label>
+                </div>
               </div>
 
               <div>
@@ -440,7 +461,7 @@ export default function NewListingPage() {
               <div>
                 <h3 className="font-semibold text-lg text-gray-900">{formData.title}</h3>
                 <p className="text-2xl font-bold text-[#CCFF00] mt-1">
-                  {parseFloat(formData.price).toLocaleString('cs-CZ')} Kč
+                  {formData.isFree ? 'Zdarma' : `${parseFloat(formData.price).toLocaleString('cs-CZ')} Kč`}
                 </p>
                 <p className="text-gray-600 mt-2 line-clamp-3">{formData.description}</p>
                 <div className="flex items-center space-x-4 mt-4 text-sm text-gray-500">

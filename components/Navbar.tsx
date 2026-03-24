@@ -116,7 +116,7 @@ export default function Navbar() {
                         Můj profil
                       </Link>
                       <Link
-                        href="/profile/listings"
+                        href="/profile"
                         className="block px-4 py-2 text-sm text-foreground hover:bg-muted"
                         onClick={() => setDropdownOpen(false)}
                       >
