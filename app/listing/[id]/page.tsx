@@ -70,7 +70,7 @@ export default function ListingDetailPage() {
   }
 
   const nextPhoto = () => {
-    if (listing && currentPhotoIndex < listing.photos.length - 1) {
+    if (listing && currentPhotoIndex < listing.images.length - 1) {
       setCurrentPhotoIndex(currentPhotoIndex + 1)
     }
   }
