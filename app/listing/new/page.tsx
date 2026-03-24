@@ -195,8 +195,8 @@ export default function NewListingPage() {
       console.log('Insert response data:', data)
       console.log('Insert error:', error)
 
-      if (error || !data || data.length === 0) {
-        const message = error?.message || 'Neznámá chyba při vkládání inzerátu'
+      if (error) {
+        const message = error.message || 'Neznámá chyba při vkládání inzerátu'
         console.error('Listing insert failed:', message, error)
         alert(`Chyba při vytváření inzerátu: ${message}`)
         return
