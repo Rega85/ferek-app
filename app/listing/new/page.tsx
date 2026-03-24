@@ -179,7 +179,7 @@ export default function NewListingPage() {
       console.log('Uploaded photos:', uploadedPhotoUrls)
 
       // Create listing
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('listings')
         .insert({
           title: formData.title.trim(),
@@ -192,11 +192,17 @@ export default function NewListingPage() {
           status: 'active'
         })
 
+      console.log('Insert response data:', data)
       console.log('Insert error:', error)
 
-      if (error) throw error
+      if (error || !data || data.length === 0) {
+        const message = error?.message || 'Neznámá chyba při vkládání inzerátu'
+        console.error('Listing insert failed:', message, error)
+        alert(`Chyba při vytváření inzerátu: ${message}`)
+        return
+      }
 
-      // Redirect to homepage
+      // Redirect to homepage only when insert succeeds
       router.push('/')
     } catch (error) {
       console.error('Error creating listing:', error)
