@@ -43,7 +43,7 @@ export default function Navbar() {
   const getUserInitials = (user: User) => {
     const name = user.user_metadata?.full_name;
     if (name) {
-      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+      return name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2);
     }
     return user.email?.[0].toUpperCase() || 'U';
   };
