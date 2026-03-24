@@ -9,6 +9,7 @@ import type { User } from "@supabase/supabase-js";
 export default function Navbar() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -36,6 +37,15 @@ export default function Navbar() {
   const handleLogout = async () => {
     await supabase.auth.signOut();
     router.push('/');
+    setDropdownOpen(false);
+  };
+
+  const getUserInitials = (user: User) => {
+    const name = user.user_metadata?.full_name;
+    if (name) {
+      return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    }
+    return user.email?.[0].toUpperCase() || 'U';
   };
 
   if (loading) {
@@ -69,16 +79,57 @@ export default function Navbar() {
           </Link>
 
           {user ? (
-            <div className="flex items-center space-x-4">
-              <span className="text-muted-foreground">
-                {user.user_metadata?.full_name || user.email}
-              </span>
+            <div className="relative">
               <button
-                onClick={handleLogout}
-                className="text-muted-foreground hover:text-foreground font-medium"
+                onClick={() => setDropdownOpen(!dropdownOpen)}
+                className="flex items-center space-x-2 text-muted-foreground hover:text-foreground"
               >
-                Odhlásit se
+                <div className="w-8 h-8 bg-accent text-accent-foreground rounded-full flex items-center justify-center font-medium text-sm">
+                  {getUserInitials(user)}
+                </div>
+                <svg
+                  className={`w-4 h-4 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
               </button>
+
+              {dropdownOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-10"
+                    onClick={() => setDropdownOpen(false)}
+                  ></div>
+                  <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg z-20">
+                    <div className="py-2">
+                      <Link
+                        href="/profile"
+                        className="block px-4 py-2 text-sm text-foreground hover:bg-muted"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        Můj profil
+                      </Link>
+                      <Link
+                        href="/profile/listings"
+                        className="block px-4 py-2 text-sm text-foreground hover:bg-muted"
+                        onClick={() => setDropdownOpen(false)}
+                      >
+                        Moje inzeráty
+                      </Link>
+                      <hr className="my-1 border-border" />
+                      <button
+                        onClick={handleLogout}
+                        className="block w-full text-left px-4 py-2 text-sm text-foreground hover:bg-muted"
+                      >
+                        Odhlásit se
+                      </button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           ) : (
             <div className="flex items-center space-x-4">
