@@ -1,58 +1,38 @@
 import ListingCard from "@/components/ListingCard";
+import { createClient } from "@/utils/supabase/server";
 
-// Mock data
-const mockListings = [
-  {
-    id: "1",
-    title: "iPhone 12 Pro 256GB",
-    price: 1500000, // 15,000 Kč
-    location: "Praha",
-    image: "https://picsum.photos/400/300?random=1",
-    isBoosted: true,
-    neklikniVerdict: "safe" as const,
-  },
-  {
-    id: "2",
-    title: "Kolo Specialized",
-    price: 2500000, // 25,000 Kč
-    location: "Brno",
-    image: "https://picsum.photos/400/300?random=2",
-    neklikniVerdict: "warning" as const,
-  },
-  {
-    id: "3",
-    title: "Nábytek do kuchyně",
-    price: 500000, // 5,000 Kč
-    location: "Ostrava",
-    image: "https://picsum.photos/400/300?random=3",
-  },
-  {
-    id: "4",
-    title: "MacBook Pro 14\"",
-    price: 8000000, // 80,000 Kč
-    location: "Plzeň",
-    image: "https://picsum.photos/400/300?random=4",
-    isBoosted: true,
-    neklikniVerdict: "safe" as const,
-  },
-  {
-    id: "5",
-    title: "Knihy o programování",
-    price: 50000, // 500 Kč
-    location: "Liberec",
-    image: "https://picsum.photos/400/300?random=5",
-    neklikniVerdict: "danger" as const,
-  },
-  {
-    id: "6",
-    title: "Auto Škoda Fabia",
-    price: 15000000, // 150,000 Kč
-    location: "České Budějovice",
-    image: "https://picsum.photos/400/300?random=6",
-  },
-];
+type ListingFromDb = {
+  id: string;
+  title: string;
+  price: number;
+  location_city: string | null;
+  images: string[] | null;
+  is_boosted: boolean;
+  neklikni_verdict: "safe" | "warning" | "danger" | null;
+};
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const { data: listings, error } = await supabase
+    .from<ListingFromDb>("listings")
+    .select("id,title,price,location_city,images,is_boosted,neklikni_verdict")
+    .eq("status", "active")
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    throw new Error(`Nepodařilo se načíst aukce: ${error.message}`);
+  }
+
+  const listingItems = (listings ?? []).map((listing) => ({
+    id: listing.id,
+    title: listing.title,
+    price: listing.price,
+    location: listing.location_city ?? "Neurčeno",
+    image: listing.images?.[0] ?? undefined,
+    isBoosted: listing.is_boosted,
+    neklikniVerdict: listing.neklikni_verdict ?? undefined,
+  }));
+
   return (
     <main className="min-h-screen bg-bg">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -88,11 +68,15 @@ export default function Home() {
         </div>
 
         {/* Feed */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          {mockListings.map((listing) => (
-            <ListingCard key={listing.id} {...listing} />
-          ))}
-        </div>
+        {listingItems.length === 0 ? (
+          <div className="text-center text-text-muted">Žádné aktivní nabídky.</div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+            {listingItems.map((listing) => (
+              <ListingCard key={listing.id} {...listing} />
+            ))}
+          </div>
+        )}
       </div>
     </main>
   );
