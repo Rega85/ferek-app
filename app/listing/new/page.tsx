@@ -53,7 +53,7 @@ export default function NewListingPage() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession()
       if (!session?.user) {
-        router.push('/auth/login')
+        router.push('/auth/login?next=/listing/new')
         return
       }
       setUser(session.user)

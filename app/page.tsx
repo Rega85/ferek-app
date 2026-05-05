@@ -49,7 +49,7 @@ export default function Home() {
             <Link href="#bezpecnost" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
               Bezpečnost
             </Link>
-            <Link href="#" className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition-colors shadow-md">
+            <Link href="/listing/new" className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition-colors shadow-md">
               Začít prodávat
             </Link>
           </div>
@@ -71,7 +71,7 @@ export default function Home() {
               První české tržiště, které ověřuje inzeráty za vás. Žádné podvody, žádný stres.
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-3 animate-fade-in-up-delay-3">
-              <Link href="#" className="bg-black text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5">
+              <Link href="/listing/new" className="bg-black text-white px-8 py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5">
                 Prohlížet nabídky
               </Link>
               <Link href="#jak-to-funguje" className="border-2 border-gray-200 text-gray-700 px-8 py-4 rounded-full text-lg font-bold hover:border-black hover:text-black transition-all">
@@ -248,7 +248,7 @@ export default function Home() {
             Přidejte svůj první inzerát za méně než minutu. Je to zdarma a trvá to jen chvilku.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-3">
-            <Link href="#" className="bg-black text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5">
+            <Link href="/listing/new" className="bg-black text-white px-10 py-4 rounded-full text-lg font-bold hover:bg-gray-800 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-0.5">
               Přidat inzerát zdarma
             </Link>
             <Link href="#jak-to-funguje" className="border-2 border-black/20 text-black px-10 py-4 rounded-full text-lg font-bold hover:border-black transition-all">
