@@ -22,7 +22,7 @@ export default async function Home({
 
   const supabase = await createClient();
   let query = supabase
-    .from<ListingFromDb>("listings")
+    .from("listings")
     .select("id,title,price,location_city,images,is_boosted,neklikni_verdict")
     .eq("status", "active")
     .order("created_at", { ascending: false });

@@ -29,11 +29,13 @@ export default async function ListingPage({
   const { id } = await params;
   const supabase = await createClient();
 
-  const { data: listing, error } = await supabase
-    .from<ListingDetail>("listings")
+  const { data, error } = await supabase
+    .from("listings")
     .select("*")
     .eq("id", id)
     .single();
+    
+  const listing = data as ListingDetail | null;
 
   if (error || !listing) {
     notFound();
@@ -41,11 +43,13 @@ export default async function ListingPage({
 
   // Zkusíme načíst profil uživatele (prodejce) - předpokládáme tabulku profiles
   // Pokud neexistuje, použijeme fallback
-  const { data: profile } = await supabase
-    .from<UserProfile>("profiles")
+  const { data: profileData } = await supabase
+    .from("profiles")
     .select("full_name, avatar_url")
     .eq("id", listing.user_id)
     .single();
+    
+  const profile = profileData as UserProfile | null;
 
   const priceCZK = (listing.price / 100).toLocaleString("cs-CZ");
   const mainImage = listing.images?.[0];
