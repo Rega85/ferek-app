@@ -279,17 +279,17 @@ export default function Home() {
             <div>
               <h4 className="font-bold text-sm text-gray-400 uppercase tracking-wider mb-4">Společnost</h4>
               <ul className="space-y-2 text-sm text-gray-500">
-                <li><Link href="#" className="hover:text-white transition-colors">O nás</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Bezpečnost</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Kontakt</Link></li>
+                <li><Link href="/o-nas" className="hover:text-white transition-colors">O nás</Link></li>
+                <li><Link href="/bezpecnost" className="hover:text-white transition-colors">Bezpečnost</Link></li>
+                <li><Link href="/kontakt" className="hover:text-white transition-colors">Kontakt</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="font-bold text-sm text-gray-400 uppercase tracking-wider mb-4">Podpora</h4>
               <ul className="space-y-2 text-sm text-gray-500">
-                <li><Link href="#" className="hover:text-white transition-colors">Nápověda</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Podmínky použití</Link></li>
-                <li><Link href="#" className="hover:text-white transition-colors">Ochrana soukromí</Link></li>
+                <li><Link href="/napoveda" className="hover:text-white transition-colors">Nápověda</Link></li>
+                <li><Link href="/podminky" className="hover:text-white transition-colors">Podmínky použití</Link></li>
+                <li><Link href="/ochrana-soukromi" className="hover:text-white transition-colors">Ochrana soukromí</Link></li>
               </ul>
             </div>
           </div>
