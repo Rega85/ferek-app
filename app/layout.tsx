@@ -1,16 +1,15 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-
-const inter = Inter({
-  variable: "--font-body",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  title: "Férek.cz - Bezpečný český marketplace",
-  description: "Prodávej na Férkovi. Bez obav. První český marketplace s Neklikni ochranou.",
+  title: "Férek – Férové tržiště, kde vás nenapálí",
+  description: "Prodávej a nakupuj bezpečně. První český marketplace s ověřováním inzerátů. Bez podvodů, bez stresu.",
+  keywords: "marketplace, bazar, inzeráty, prodej, nákup, bezpečný, ověřený, Česko",
+  openGraph: {
+    title: "Férek – Férové tržiště",
+    description: "Prodávej a nakupuj bezpečně. První český marketplace s ověřováním inzerátů.",
+    type: "website",
+  },
 };
 
 export default function RootLayout({
@@ -19,9 +18,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="cs" className={inter.variable}>
-      <body className="font-body">
-        <Navbar />
+    <html lang="cs">
+      <body>
         {children}
       </body>
     </html>
