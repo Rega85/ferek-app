@@ -20,35 +20,46 @@ export default async function Home({
   const q = typeof params.q === 'string' ? params.q : '';
   const city = typeof params.city === 'string' ? params.city : '';
 
-  const supabase = await createClient();
-  let query = supabase
-    .from("listings")
-    .select("id,title,price,location_city,images,is_boosted,neklikni_verdict")
-    .eq("status", "active")
-    .order("created_at", { ascending: false });
+  let listingItems: {
+    id: string;
+    title: string;
+    price: number;
+    location: string;
+    image?: string;
+    isBoosted: boolean;
+    neklikniVerdict?: "safe" | "warning" | "danger";
+  }[] = [];
 
-  if (q) {
-    query = query.ilike("title", `%${q}%`);
+  try {
+    const supabase = await createClient();
+    let query = supabase
+      .from("listings")
+      .select("id,title,price,location_city,images,is_boosted,neklikni_verdict")
+      .eq("status", "active")
+      .order("created_at", { ascending: false });
+
+    if (q) {
+      query = query.ilike("title", `%${q}%`);
+    }
+    if (city) {
+      query = query.ilike("location_city", `%${city}%`);
+    }
+
+    const { data: listings } = await query;
+
+    listingItems = (listings ?? []).map((listing: ListingFromDb) => ({
+      id: listing.id,
+      title: listing.title,
+      price: listing.price,
+      location: listing.location_city ?? "Neurčeno",
+      image: listing.images?.[0] ?? undefined,
+      isBoosted: listing.is_boosted,
+      neklikniVerdict: listing.neklikni_verdict ?? undefined,
+    }));
+  } catch {
+    // Supabase connection failed — show empty state gracefully
+    console.error("Failed to connect to Supabase");
   }
-  if (city) {
-    query = query.ilike("location_city", `%${city}%`);
-  }
-
-  const { data: listings, error } = await query;
-
-  if (error) {
-    throw new Error(`Nepodařilo se načíst aukce: ${error.message}`);
-  }
-
-  const listingItems = (listings ?? []).map((listing) => ({
-    id: listing.id,
-    title: listing.title,
-    price: listing.price,
-    location: listing.location_city ?? "Neurčeno",
-    image: listing.images?.[0] ?? undefined,
-    isBoosted: listing.is_boosted,
-    neklikniVerdict: listing.neklikni_verdict ?? undefined,
-  }));
 
   const categories = [
     { id: 'vse', name: 'Vše', icon: '🌍' },
