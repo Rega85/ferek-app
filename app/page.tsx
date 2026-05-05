@@ -1,4 +1,5 @@
 import Link from "next/link";
+import LandingNavbar from "@/components/LandingNavbar";
 
 const mockListings = [
   { id: 1, title: "iPhone 15 Pro Max 256GB", price: "28 900", location: "Praha", img: "📱", badge: "safe" },
@@ -37,24 +38,7 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
       {/* ═══ NAVBAR ═══ */}
-      <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-gray-200/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-          <Link href="/" className="text-2xl sm:text-3xl font-black tracking-tight">
-            Férek<span className="text-[#CCFF00]">.</span>
-          </Link>
-          <div className="flex items-center gap-3 sm:gap-6">
-            <Link href="#jak-to-funguje" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
-              Jak to funguje
-            </Link>
-            <Link href="#bezpecnost" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
-              Bezpečnost
-            </Link>
-            <Link href="/listing/new" className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition-colors shadow-md">
-              Začít prodávat
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <LandingNavbar />
 
       {/* ═══ HERO ═══ */}
       <section className="pt-28 sm:pt-36 pb-16 sm:pb-24 px-4 bg-gradient-to-b from-[#f0ffe0] via-white to-white overflow-hidden">
