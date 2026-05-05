@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import type { User } from '@supabase/supabase-js'
+import AppNavbar from '@/components/AppNavbar'
 
 type ListingFormData = {
   title: string
@@ -235,7 +236,9 @@ export default function NewListingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <>
+    <AppNavbar />
+    <div className="min-h-screen bg-gray-50 pt-20">
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Syne, sans-serif' }}>
@@ -496,5 +499,6 @@ export default function NewListingPage() {
         )}
       </div>
     </div>
+    </>
   )
 }

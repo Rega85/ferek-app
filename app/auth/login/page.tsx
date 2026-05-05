@@ -17,19 +17,11 @@ export default function LoginPage() {
     e.preventDefault()
     setLoading(true)
     setError('')
-
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-
-      if (error) {
-        setError(error.message)
-      } else {
-        router.push('/')
-      }
-    } catch (err) {
+      const { error } = await supabase.auth.signInWithPassword({ email, password })
+      if (error) setError(error.message)
+      else router.push('/')
+    } catch {
       setError('Došlo k chybě při přihlašování')
     } finally {
       setLoading(false)
@@ -37,71 +29,46 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center px-4">
-      <div className="max-w-md w-full space-y-8">
-        <div className="text-center">
-          <h1 className="text-4xl font-display font-bold text-foreground mb-2">
-            Férek
-          </h1>
-          <p className="text-muted-foreground">
-            Přihlaste se do svého účtu
-          </p>
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-8">
+          <Link href="/" className="text-4xl font-black tracking-tight inline-block">
+            Férek<span className="text-[#CCFF00]">.</span>
+          </Link>
+          <p className="text-gray-500 mt-2">Přihlaste se do svého účtu</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 sm:p-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">{error}</div>
+            )}
+
+            <div>
+              <label htmlFor="email" className="block text-sm font-semibold text-gray-900 mb-1.5">E-mail</label>
+              <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CCFF00] focus:border-transparent bg-gray-50 text-gray-900 placeholder:text-gray-400"
+                placeholder="vas@email.cz" />
             </div>
-          )}
 
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-2">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-              placeholder="vas@email.cz"
-            />
-          </div>
+            <div>
+              <label htmlFor="password" className="block text-sm font-semibold text-gray-900 mb-1.5">Heslo</label>
+              <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
+                className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CCFF00] focus:border-transparent bg-gray-50 text-gray-900 placeholder:text-gray-400"
+                placeholder="Vaše heslo" />
+            </div>
 
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-foreground mb-2">
-              Heslo
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full px-3 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent"
-              placeholder="Vaše heslo"
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-accent text-accent-foreground py-3 px-4 rounded-lg font-medium hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Přihlašování...' : 'Přihlásit se'}
-          </button>
-        </form>
-
-        <div className="text-center">
-          <p className="text-muted-foreground">
-            Nemáte účet?{' '}
-            <Link href="/auth/register" className="text-accent hover:text-accent/80 font-medium">
-              Zaregistrujte se
-            </Link>
-          </p>
+            <button type="submit" disabled={loading}
+              className="w-full bg-black text-white py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base">
+              {loading ? 'Přihlašování...' : 'Přihlásit se'}
+            </button>
+          </form>
         </div>
+
+        <p className="text-center text-gray-500 mt-6 text-sm">
+          Nemáte účet?{' '}
+          <Link href="/auth/register" className="text-black font-semibold hover:underline">Zaregistrujte se</Link>
+        </p>
       </div>
     </div>
   )
