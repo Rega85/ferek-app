@@ -1,34 +1,42 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --color-bg: #FFFFFF;
-  --color-bg-soft: #F5F5F5;
-  --color-text: #0F0F0F;
+  --background: #F8F9FA; /* Světlejší Letgo-like pozadí */
+  --foreground: #111827;
+  --color-bg: #F8F9FA;
+  --color-bg-soft: #FFFFFF;
+  --color-text: #111827;
   --color-text-muted: #6B7280;
-  --color-accent: #CCFF00;
-  --color-accent-dark: #0F0F0F;
-  --color-danger: #FF3B30;
-  --color-warning: #FF9500;
+  --color-accent: #CCFF00; /* Férek neon green */
+  --color-accent-dark: #000000;
+  --color-danger: #EF4444;
+  --color-warning: #F59E0B;
   --color-border: #E5E7EB;
-  --radius-sm: 6px;
-  --radius-md: 12px;
-  --radius-lg: 20px;
+  --radius-sm: 8px;
+  --radius-md: 16px; /* Větší zaoblení jako u mobilních appek */
+  --radius-lg: 24px;
   --radius-full: 9999px;
-  --font-display: 'Syne', sans-serif;
-  --font-body: 'DM Sans', sans-serif;
+  --font-display: 'Inter', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-body);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
 }
