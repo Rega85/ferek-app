@@ -28,6 +28,9 @@ const CATEGORIES = [
   'Ostatní'
 ]
 
+const MIN_PHOTOS = 4
+const MAX_PHOTOS = 8
+
 export default function NewListingPage() {
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
@@ -81,8 +84,8 @@ export default function NewListingPage() {
       file.type.startsWith('image/')
     )
 
-    if (files.length + photos.length > 5) {
-      alert('Maximum 5 fotografií')
+    if (files.length + photos.length > MAX_PHOTOS) {
+      alert(`Nahrajte maximálně ${MAX_PHOTOS} fotografií`)
       return
     }
 
@@ -91,8 +94,8 @@ export default function NewListingPage() {
 
   const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || [])
-    if (files.length + photos.length > 5) {
-      alert('Maximum 5 fotografií')
+    if (files.length + photos.length > MAX_PHOTOS) {
+      alert(`Nahrajte maximálně ${MAX_PHOTOS} fotografií`)
       return
     }
     handleFiles(files)
@@ -148,13 +151,14 @@ export default function NewListingPage() {
     const newErrors: Partial<ListingFormData> = {}
 
     if (step === 1) {
-      if (photos.length === 0) {
-        alert('Přidejte alespoň jednu fotografii')
+      if (photos.length < MIN_PHOTOS) {
+        alert(`Přidejte alespoň ${MIN_PHOTOS} fotografie. Kupující potřebuje vidět stav věci z více stran.`)
         return false
       }
     } else if (step === 2) {
       if (!formData.title.trim()) newErrors.title = 'Název je povinný'
       if (!formData.description.trim()) newErrors.description = 'Popis je povinný'
+      if (formData.description.trim().length < 40) newErrors.description = 'Popis musí mít alespoň 40 znaků'
       if (!formData.isFree && (!formData.price || parseFloat(formData.price) <= 0)) newErrors.price = 'Cena musí být větší než 0'
       if (!formData.category) newErrors.category = 'Kategorie je povinná'
       if (!formData.city.trim()) newErrors.city = 'Město je povinné'
@@ -168,6 +172,11 @@ export default function NewListingPage() {
 
   const handleSubmit = async () => {
     if (!user || !validateStep(2)) return
+    if (photos.length < MIN_PHOTOS) {
+      alert(`Přidejte alespoň ${MIN_PHOTOS} fotografie.`)
+      setCurrentStep(1)
+      return
+    }
 
     setSubmitting(true)
     try {
@@ -304,7 +313,7 @@ export default function NewListingPage() {
                 ))}
 
                 {/* Upload Area */}
-                {photos.length < 5 && (
+                {photos.length < MAX_PHOTOS && (
                   <div
                     onDragOver={handleDragOver}
                     onDragLeave={handleDragLeave}
@@ -338,7 +347,7 @@ export default function NewListingPage() {
               </div>
 
               <p className="text-sm text-gray-500">
-                Přidejte až 5 fotografií. První fotografie bude hlavní. Podporované formáty: JPG, PNG, WebP.
+                Nahrajte minimálně {MIN_PHOTOS} a maximálně {MAX_PHOTOS} fotografií. První fotografie bude hlavní. Doporučujeme předek, zadek, detail vady a celkový stav.
               </p>
             </div>
 

@@ -20,6 +20,7 @@ type HomeProps = {
   searchParams?: Promise<{
     q?: string;
     category?: string;
+    city?: string;
   }>;
 };
 
@@ -39,6 +40,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const params = await searchParams;
   const search = params?.q?.trim() ?? "";
   const activeCategory = params?.category?.trim() ?? "";
+  const activeCity = params?.city?.trim() ?? "";
 
   const supabase = await createClient();
   let query = supabase
@@ -50,6 +52,10 @@ export default async function Home({ searchParams }: HomeProps) {
 
   if (activeCategory) {
     query = query.eq("category", activeCategory);
+  }
+
+  if (activeCity) {
+    query = query.ilike("location_city", `%${activeCity}%`);
   }
 
   const [{ data, error }, { count }] = await Promise.all([
@@ -106,7 +112,7 @@ export default async function Home({ searchParams }: HomeProps) {
             </div>
           </div>
 
-          <form className="mt-8 grid sm:grid-cols-[1fr_auto_auto] gap-3" action="/">
+          <form className="mt-8 grid sm:grid-cols-[1fr_220px_auto_auto] gap-3" action="/">
             <input
               type="search"
               name="q"
@@ -115,6 +121,13 @@ export default async function Home({ searchParams }: HomeProps) {
               className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-base outline-none focus:ring-2 focus:ring-[#CCFF00]"
             />
             {activeCategory ? <input type="hidden" name="category" value={activeCategory} /> : null}
+            <input
+              type="search"
+              name="city"
+              defaultValue={activeCity}
+              placeholder="Město nebo okolí"
+              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-base outline-none focus:ring-2 focus:ring-[#CCFF00]"
+            />
             <button className="bg-black text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors">
               Hledat
             </button>
@@ -123,15 +136,28 @@ export default async function Home({ searchParams }: HomeProps) {
             </Link>
           </form>
 
+          <div className="mt-3">
+            <Link
+              href={`/mapa${activeCity ? `?city=${encodeURIComponent(activeCity)}` : ""}`}
+              className="inline-flex items-center text-sm font-bold text-gray-700 hover:text-black"
+            >
+              Zobrazit nabídky na Google mapě
+            </Link>
+          </div>
+
           <div className="flex overflow-x-auto gap-2 mt-5 pb-2 scrollbar-hide">
             <Link
-              href={search ? `/?q=${encodeURIComponent(search)}` : "/"}
+              href={`/${search || activeCity ? `?${new URLSearchParams({ ...(search ? { q: search } : {}), ...(activeCity ? { city: activeCity } : {}) }).toString()}` : ""}`}
               className={`px-4 py-2 rounded-full text-sm font-bold border shrink-0 ${!activeCategory ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-200"}`}
             >
               Vše
             </Link>
             {categories.map((category) => {
-              const href = `/?category=${encodeURIComponent(category)}${search ? `&q=${encodeURIComponent(search)}` : ""}`;
+              const href = `/?${new URLSearchParams({
+                category,
+                ...(search ? { q: search } : {}),
+                ...(activeCity ? { city: activeCity } : {}),
+              }).toString()}`;
               return (
                 <Link
                   key={category}

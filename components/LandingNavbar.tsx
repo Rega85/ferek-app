@@ -32,10 +32,10 @@ export default function LandingNavbar() {
           Férek<span className="text-[#CCFF00]">.</span>
         </Link>
         <div className="flex items-center gap-3 sm:gap-5">
-          <Link href="#jak-to-funguje" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
-            Jak to funguje
+          <Link href="/mapa" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
+            Mapa
           </Link>
-          <Link href="#bezpecnost" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
+          <Link href="/bezpecnost" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
             Bezpečnost
           </Link>
 

@@ -47,6 +47,9 @@ export default function AppNavbar() {
         </Link>
 
         <div className="flex items-center gap-3 sm:gap-4">
+          <Link href="/mapa" className="text-gray-600 hover:text-black text-sm font-bold hidden md:block transition-colors">
+            Mapa
+          </Link>
           <Link href="/listing/new" className="bg-black text-white px-4 py-2 rounded-full text-sm font-bold hover:bg-gray-800 transition-colors flex items-center gap-1.5">
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
             <span className="hidden sm:inline">Prodat</span>

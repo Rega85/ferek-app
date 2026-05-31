@@ -69,6 +69,7 @@ export default async function ListingPage({
   const isOwner = user?.id === listing.user_id;
   const sellerName = seller?.full_name || "Uživatel Ferek";
   const sellerInitial = sellerName[0]?.toUpperCase() || "U";
+  const mapQuery = `${listing.location_city || "Česko"} ${listing.title}`;
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -193,6 +194,31 @@ export default async function ListingPage({
                   Bez zjevných rizik v základní kontrole.
                 </p>
               )}
+            </section>
+
+            <section className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+              <div className="p-5">
+                <h2 className="font-black text-lg">Lokalita</h2>
+                <p className="text-sm text-gray-500 mt-1">
+                  {listing.location_city || "Prodejce neuvedl město."}
+                </p>
+              </div>
+              <iframe
+                title="Mapa lokality inzerátu"
+                src={`https://maps.google.com/maps?q=${encodeURIComponent(mapQuery)}&output=embed`}
+                className="w-full h-56 border-0"
+                loading="lazy"
+              />
+              <div className="p-5 pt-3">
+                <a
+                  href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(mapQuery)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-sm font-bold text-gray-700 hover:text-black"
+                >
+                  Otevřít lokalitu v Google Maps
+                </a>
+              </div>
             </section>
           </aside>
         </div>
