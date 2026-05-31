@@ -1,0 +1,7 @@
+.npm-cache
+.env*
+!.env.example
+supabase.exe
+supabase.tar.gz
+supabase/.branches
+supabase/.temp
