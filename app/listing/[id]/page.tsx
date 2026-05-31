@@ -2,131 +2,199 @@ import { createClient } from "@/utils/supabase/server";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
+type Listing = {
+  id: string;
+  user_id: string;
+  title: string;
+  description: string | null;
+  price: number;
+  category: string;
+  location_city: string | null;
+  status: string;
+  images: string[] | null;
+  neklikni_score: number | null;
+  neklikni_verdict: "safe" | "warning" | "danger" | null;
+  neklikni_flags: string[] | null;
+  neklikni_checked_at: string | null;
+  created_at: string;
+};
+
+type Seller = {
+  id: string;
+  full_name: string | null;
+  avatar_url: string | null;
+  trust_score: number;
+  is_verified: boolean;
+  created_at: string;
+};
+
+const verdictConfig = {
+  safe: { label: "Ověřeno", className: "bg-green-500 text-white", note: "Inzerát prošel základní bezpečnostní kontrolou." },
+  warning: { label: "Opatrně", className: "bg-amber-500 text-white", note: "Neklikni našel signály, které stojí za kontrolu." },
+  danger: { label: "Riziko", className: "bg-red-500 text-white", note: "U tohoto inzerátu doporučujeme zvýšenou opatrnost." },
+};
+
 export default async function ListingPage({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  let listing: Record<string, unknown> | null = null;
-  let profile: Record<string, unknown> | null = null;
+  const { data: listingData, error } = await supabase
+    .from("listings")
+    .select("*")
+    .eq("id", id)
+    .single();
 
-  try {
-    const supabase = await createClient();
-    const { data, error } = await supabase.from("listings").select("*").eq("id", id).single();
-    if (error || !data) notFound();
-    listing = data;
+  if (error || !listingData) notFound();
 
-    const { data: profileData } = await supabase.from("profiles").select("full_name, avatar_url").eq("id", listing!.user_id as string).single();
-    profile = profileData;
-  } catch {
-    notFound();
-  }
+  const listing = listingData as Listing;
+  const { data: sellerData } = await supabase
+    .from("users")
+    .select("id, full_name, avatar_url, trust_score, is_verified, created_at")
+    .eq("id", listing.user_id)
+    .single();
 
-  if (!listing) notFound();
-
-  const price = listing.price as number;
-  const priceCZK = (price / 100).toLocaleString("cs-CZ");
-  const mainImage = (listing.images as string[] | null)?.[0];
-  const allImages = (listing.images as string[] | null) ?? [];
-  const date = new Date(listing.created_at as string).toLocaleDateString("cs-CZ");
-  const verdict = listing.neklikni_verdict as string | null;
+  const seller = sellerData as Seller | null;
+  const priceCZK = (listing.price / 100).toLocaleString("cs-CZ");
+  const mainImage = listing.images?.[0];
+  const allImages = listing.images ?? [];
+  const date = new Date(listing.created_at).toLocaleDateString("cs-CZ");
+  const verdict = listing.neklikni_verdict ? verdictConfig[listing.neklikni_verdict] : null;
+  const isOwner = user?.id === listing.user_id;
+  const sellerName = seller?.full_name || "Uživatel Ferek";
+  const sellerInitial = sellerName[0]?.toUpperCase() || "U";
 
   return (
     <main className="min-h-screen bg-gray-50">
-      {/* Sticky Navbar */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link href="/" className="text-2xl sm:text-3xl font-black tracking-tight">
-            Férek<span className="text-[#CCFF00]">.</span>
+            Ferek<span className="text-[#CCFF00]">.</span>
           </Link>
-          <Link href="/" className="text-gray-500 hover:text-black text-sm font-medium transition-colors">← Zpět</Link>
+          <Link href="/" className="text-gray-500 hover:text-black text-sm font-medium transition-colors">Zpět na bazar</Link>
         </div>
       </nav>
 
       <div className="pt-20 max-w-6xl mx-auto px-4 py-8">
         <div className="grid md:grid-cols-5 gap-6">
-          {/* Images (3/5) */}
-          <div className="md:col-span-3">
-            <div className="bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm">
+          <div className="md:col-span-3 space-y-4">
+            <div className="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-sm">
               <div className="aspect-[4/3] bg-gray-100 relative">
                 {mainImage ? (
-                  <img src={mainImage} alt={listing.title as string} className="w-full h-full object-cover" />
+                  <img src={mainImage} alt={listing.title} className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
-                    <span className="text-6xl mb-2">📷</span>
+                    <span className="text-6xl mb-2">+</span>
                     <span className="font-medium">Bez fotky</span>
                   </div>
                 )}
                 {verdict && (
                   <div className="absolute top-4 left-4">
-                    <span className={`px-4 py-2 rounded-full font-bold text-sm shadow-lg flex items-center gap-2 ${
-                      verdict === "safe" ? "bg-green-500 text-white" : verdict === "warning" ? "bg-yellow-500 text-white" : "bg-red-500 text-white"
-                    }`}>
-                      {verdict === "safe" ? "✓ Ověřený" : verdict === "warning" ? "⚠ Opatrně" : "✕ Podezřelý"}
+                    <span className={`px-4 py-2 rounded-md font-bold text-sm shadow-lg ${verdict.className}`}>
+                      {verdict.label}
                     </span>
                   </div>
                 )}
               </div>
 
-              {/* Thumbnails */}
               {allImages.length > 1 && (
                 <div className="flex gap-2 p-3 overflow-x-auto">
-                  {allImages.map((img, i) => (
-                    <img key={i} src={img} alt="" className="w-16 h-16 object-cover rounded-lg border border-gray-200 shrink-0" />
+                  {allImages.map((img, index) => (
+                    <img key={img} src={img} alt={`${listing.title} ${index + 1}`} className="w-16 h-16 object-cover rounded-lg border border-gray-200 shrink-0" />
                   ))}
                 </div>
               )}
             </div>
+
+            <section className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
+              <h2 className="font-black text-xl mb-3">Popis</h2>
+              <p className="text-gray-700 whitespace-pre-line leading-relaxed">
+                {listing.description || "Prodejce nepřidal popis."}
+              </p>
+            </section>
           </div>
 
-          {/* Info (2/5) */}
-          <div className="md:col-span-2 flex flex-col gap-4">
-            {/* Price Card */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <p className="text-3xl sm:text-4xl font-black text-gray-900 mb-1">
-                {price === 0 ? "Zdarma" : `${priceCZK} Kč`}
+          <aside className="md:col-span-2 flex flex-col gap-4">
+            <section className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
+              <p className="text-3xl sm:text-4xl font-black text-gray-900 mb-2">
+                {listing.price === 0 ? "Zdarma" : `${priceCZK} Kč`}
               </p>
-              <h1 className="text-lg font-semibold text-gray-700 mb-4">{listing.title as string}</h1>
-              <div className="flex items-center text-gray-500 text-sm gap-4">
-                <span className="flex items-center gap-1">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /></svg>
-                  {(listing.location_city as string) || "Neurčeno"}
-                </span>
+              <h1 className="text-xl font-bold text-gray-800 mb-4">{listing.title}</h1>
+              <div className="grid grid-cols-2 gap-3 text-sm text-gray-500">
+                <span>{listing.location_city || "Neuvedeno"}</span>
                 <span>Přidáno {date}</span>
+                <span>{listing.category}</span>
+                <span>{listing.status === "active" ? "Aktivní" : listing.status}</span>
               </div>
-            </div>
+            </section>
 
-            {/* Seller */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
+            <section className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
               <div className="flex items-center gap-4 mb-4">
-                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden">
-                  {(profile as Record<string, unknown>)?.avatar_url ? (
-                    <img src={(profile as Record<string, unknown>).avatar_url as string} alt="" className="w-full h-full object-cover" />
-                  ) : (
-                    <span className="text-lg font-bold text-gray-500">{((profile as Record<string, unknown>)?.full_name as string || "U")[0]}</span>
-                  )}
+                <div className="w-12 h-12 rounded-full bg-[#CCFF00] flex items-center justify-center overflow-hidden font-black">
+                  {seller?.avatar_url ? <img src={seller.avatar_url} alt="" className="w-full h-full object-cover" /> : sellerInitial}
                 </div>
                 <div>
-                  <p className="font-bold text-gray-900">{(profile as Record<string, unknown>)?.full_name as string || "Uživatel Férek"}</p>
-                  <p className="text-xs text-gray-500">Prodejce</p>
+                  <p className="font-bold text-gray-900">{sellerName}</p>
+                  <p className="text-xs text-gray-500">
+                    Trust score {seller?.trust_score ?? 50}/100 {seller?.is_verified ? "• ověřený prodejce" : ""}
+                  </p>
                 </div>
               </div>
-              <button className="w-full bg-black text-white font-bold py-3.5 rounded-xl hover:bg-gray-800 transition-colors flex justify-center items-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
-                Napsat prodejci
-              </button>
-            </div>
 
-            {/* Description */}
-            <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-              <h3 className="font-bold text-gray-900 mb-3">Popis</h3>
-              <p className="text-gray-600 whitespace-pre-line leading-relaxed text-sm">
-                {(listing.description as string) || "Bez popisu."}
+              {isOwner ? (
+                <Link href="/profile" className="block w-full text-center bg-gray-900 text-white font-bold py-3.5 rounded-lg hover:bg-gray-800 transition-colors">
+                  Spravovat v profilu
+                </Link>
+              ) : user ? (
+                <form action={`/listing/${listing.id}/contact`} method="post" className="space-y-3">
+                  <textarea
+                    name="message"
+                    required
+                    minLength={2}
+                    maxLength={1000}
+                    defaultValue={`Dobrý den, mám zájem o inzerát "${listing.title}". Je ještě dostupný?`}
+                    className="w-full min-h-28 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#CCFF00]"
+                  />
+                  <button className="w-full bg-black text-white font-bold py-3.5 rounded-lg hover:bg-gray-800 transition-colors">
+                    Napsat prodejci
+                  </button>
+                </form>
+              ) : (
+                <Link href={`/auth/login?next=/listing/${listing.id}`} className="block w-full text-center bg-black text-white font-bold py-3.5 rounded-lg hover:bg-gray-800 transition-colors">
+                  Přihlásit se a napsat
+                </Link>
+              )}
+            </section>
+
+            <section className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
+              <div className="flex items-center justify-between mb-3">
+                <h2 className="font-black text-lg">Kontrola Neklikni</h2>
+                <span className="text-2xl font-black">{listing.neklikni_score ?? "-"}</span>
+              </div>
+              <p className="text-sm text-gray-500 mb-4">
+                {verdict?.note ?? "Inzerát zatím čeká na kontrolu."}
               </p>
-            </div>
-          </div>
+              {listing.neklikni_flags && listing.neklikni_flags.length > 0 ? (
+                <ul className="space-y-2">
+                  {listing.neklikni_flags.map((flag) => (
+                    <li key={flag} className="text-sm bg-amber-50 text-amber-800 border border-amber-100 rounded-md px-3 py-2">
+                      {flag}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="text-sm bg-green-50 text-green-700 border border-green-100 rounded-md px-3 py-2">
+                  Bez zjevných rizik v základní kontrole.
+                </p>
+              )}
+            </section>
+          </aside>
         </div>
       </div>
     </main>
