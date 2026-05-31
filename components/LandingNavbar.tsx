@@ -26,30 +26,29 @@ export default function LandingNavbar() {
     : user?.email?.[0].toUpperCase() || 'U';
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
-        <Link href="/" className="text-2xl sm:text-3xl font-black tracking-tight">
-          Férek<span className="text-[#CCFF00]">.</span>
+    <nav className="fixed left-0 right-0 top-0 z-50 bg-white/90 backdrop-blur-md">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6">
+        <Link href="/" className="text-4xl font-black tracking-tight text-[#ff5a1f] sm:text-5xl">
+          Ferek
         </Link>
         <div className="flex items-center gap-3 sm:gap-5">
-          <Link href="/mapa" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
+          <Link href="/mapa" className="hidden text-sm font-bold text-gray-500 transition-colors hover:text-black md:block">
             Mapa
           </Link>
-          <Link href="/bezpecnost" className="text-gray-500 hover:text-black text-sm font-medium hidden md:block transition-colors">
+          <Link href="/bezpecnost" className="hidden text-sm font-bold text-gray-500 transition-colors hover:text-black md:block">
             Bezpečnost
           </Link>
-
-          <Link href="/listing/new" className="bg-black text-white px-5 py-2.5 rounded-full text-sm font-bold hover:bg-gray-800 transition-colors shadow-md">
-            Začít prodávat
+          <Link href="/listing/new" className="hidden rounded-full bg-[#ff5a1f] px-5 py-2.5 text-sm font-black text-white shadow-md transition-colors hover:bg-orange-600 sm:block">
+            Prodat
           </Link>
 
           {ready && (
             user ? (
-              <Link href="/profile" className="w-9 h-9 bg-[#CCFF00] text-black rounded-full flex items-center justify-center font-bold text-sm hover:scale-105 transition-transform">
+              <Link href="/profile" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff5a1f] text-sm font-black text-white transition-transform hover:scale-105">
                 {initials}
               </Link>
             ) : (
-              <Link href="/auth/login" className="text-gray-600 hover:text-black text-sm font-semibold hidden sm:block transition-colors">
+              <Link href="/auth/login" className="hidden text-sm font-bold text-gray-600 transition-colors hover:text-black sm:block">
                 Přihlásit
               </Link>
             )

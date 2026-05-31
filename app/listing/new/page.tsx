@@ -354,7 +354,7 @@ export default function NewListingPage() {
             <div className="flex justify-end">
               <button
                 onClick={nextStep}
-                className="bg-[#CCFF00] text-black px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+                className="bg-[#ff5a1f] text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 transition-colors"
               >
                 Další krok
               </button>
@@ -463,7 +463,7 @@ export default function NewListingPage() {
               </button>
               <button
                 onClick={nextStep}
-                className="bg-[#CCFF00] text-black px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors"
+                className="bg-[#ff5a1f] text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 transition-colors"
               >
                 Další krok
               </button>
@@ -510,7 +510,7 @@ export default function NewListingPage() {
               <button
                 onClick={handleSubmit}
                 disabled={submitting}
-                className="bg-[#CCFF00] text-black px-6 py-3 rounded-lg font-medium hover:bg-opacity-90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-[#ff5a1f] text-white px-6 py-3 rounded-lg font-bold hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {submitting ? 'Publikování...' : 'Publikovat inzerát'}
               </button>

@@ -76,7 +76,7 @@ export default async function ListingPage({
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link href="/" className="text-2xl sm:text-3xl font-black tracking-tight">
-            Ferek<span className="text-[#CCFF00]">.</span>
+            <span className="text-[#ff5a1f]">Ferek</span>
           </Link>
           <Link href="/" className="text-gray-500 hover:text-black text-sm font-medium transition-colors">Zpět na bazar</Link>
         </div>
@@ -149,7 +149,7 @@ export default async function ListingPage({
               </div>
 
               {isOwner ? (
-                <Link href="/profile" className="block w-full text-center bg-gray-900 text-white font-bold py-3.5 rounded-lg hover:bg-gray-800 transition-colors">
+                <Link href="/profile" className="block w-full text-center bg-gray-900 text-white font-bold py-3.5 rounded-[18px] hover:bg-gray-800 transition-colors">
                   Spravovat v profilu
                 </Link>
               ) : user ? (
@@ -162,12 +162,12 @@ export default async function ListingPage({
                     defaultValue={`Dobrý den, mám zájem o inzerát "${listing.title}". Je ještě dostupný?`}
                     className="w-full min-h-28 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#CCFF00]"
                   />
-                  <button className="w-full bg-black text-white font-bold py-3.5 rounded-lg hover:bg-gray-800 transition-colors">
+                  <button className="w-full bg-[#ff5a1f] text-white font-black py-4 rounded-[18px] hover:bg-orange-600 transition-colors">
                     Napsat prodejci
                   </button>
                 </form>
               ) : (
-                <Link href={`/auth/login?next=/listing/${listing.id}`} className="block w-full text-center bg-black text-white font-bold py-3.5 rounded-lg hover:bg-gray-800 transition-colors">
+                <Link href={`/auth/login?next=/listing/${listing.id}`} className="block w-full text-center bg-[#ff5a1f] text-white font-black py-4 rounded-[18px] hover:bg-orange-600 transition-colors">
                   Přihlásit se a napsat
                 </Link>
               )}

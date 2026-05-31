@@ -1,6 +1,7 @@
 import Link from "next/link";
 import LandingNavbar from "@/components/LandingNavbar";
 import ListingCard from "@/components/ListingCard";
+import BottomNav from "@/components/BottomNav";
 import { createClient } from "@/utils/supabase/server";
 
 type Listing = {
@@ -50,13 +51,8 @@ export default async function Home({ searchParams }: HomeProps) {
     .order("created_at", { ascending: false })
     .limit(48);
 
-  if (activeCategory) {
-    query = query.eq("category", activeCategory);
-  }
-
-  if (activeCity) {
-    query = query.ilike("location_city", `%${activeCity}%`);
-  }
+  if (activeCategory) query = query.eq("category", activeCategory);
+  if (activeCity) query = query.ilike("location_city", `%${activeCity}%`);
 
   const [{ data, error }, { count }] = await Promise.all([
     query,
@@ -68,32 +64,27 @@ export default async function Home({ searchParams }: HomeProps) {
     const haystack = `${listing.title} ${listing.description ?? ""} ${listing.location_city ?? ""}`.toLocaleLowerCase("cs-CZ");
     return haystack.includes(search.toLocaleLowerCase("cs-CZ"));
   });
-
   const verifiedCount = listings.filter((listing) => listing.neklikni_verdict === "safe").length;
+  const allHref = `/${search || activeCity ? `?${new URLSearchParams({ ...(search ? { q: search } : {}), ...(activeCity ? { city: activeCity } : {}) }).toString()}` : ""}`;
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-white pb-24 md:pb-0">
       <LandingNavbar />
 
-      <section className="pt-24 sm:pt-28 pb-6 px-4 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-[1fr_360px] gap-8 items-end">
+      <section className="bg-white px-4 pb-4 pt-28 sm:pt-32">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-5 lg:grid-cols-[1fr_360px] lg:items-end">
             <div>
-              <p className="inline-flex items-center bg-[#CCFF00] text-black text-xs font-black px-3 py-1 rounded-md mb-4">
-                Bezpečný bazar s ochranou Neklikni
-              </p>
-              <h1 className="text-4xl sm:text-6xl font-black tracking-tight max-w-4xl">
-                Kupujte a prodávejte z druhé ruky bez zbytečného rizika.
-              </h1>
-              <p className="text-gray-500 text-lg mt-4 max-w-2xl">
-                Ferek je marketplace ve stylu Letgo, kde bude každý inzerát a prodejce procházet bezpečnostním ověřením.
+              <h1 className="sr-only">Ferek bazar</h1>
+              <p className="max-w-2xl text-base text-gray-500 sm:text-lg">
+                Bezpečný bazar ve stylu Letgo. Velké fotky, nabídky v okolí a Neklikni ochrana u každého důležitého kroku.
               </p>
             </div>
 
-            <div className="bg-black text-white rounded-lg p-5">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="font-black text-lg">Bezpečnostní stav</h2>
-                <span className="bg-[#CCFF00] text-black text-xs font-black px-2 py-1 rounded">Neklikni</span>
+            <div className="hidden rounded-[20px] bg-black p-5 text-white lg:block">
+              <div className="mb-4 flex items-center justify-between">
+                <h2 className="text-lg font-black">Bezpečnostní stav</h2>
+                <span className="rounded-lg bg-[#ff5a1f] px-2 py-1 text-xs font-black text-white">Neklikni</span>
               </div>
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div>
@@ -112,13 +103,13 @@ export default async function Home({ searchParams }: HomeProps) {
             </div>
           </div>
 
-          <form className="mt-8 grid sm:grid-cols-[1fr_220px_auto_auto] gap-3" action="/">
+          <form className="mt-7 grid gap-3 sm:grid-cols-[1fr_220px_auto_auto]" action="/">
             <input
               type="search"
               name="q"
               defaultValue={search}
-              placeholder="Hledat iPhone, kolo, gauč..."
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-base outline-none focus:ring-2 focus:ring-[#CCFF00]"
+              placeholder="Co hledáte?"
+              className="w-full rounded-[18px] border border-gray-200 bg-white px-5 py-4 text-base outline-none focus:ring-2 focus:ring-[#ff5a1f]"
             />
             {activeCategory ? <input type="hidden" name="category" value={activeCategory} /> : null}
             <input
@@ -126,30 +117,24 @@ export default async function Home({ searchParams }: HomeProps) {
               name="city"
               defaultValue={activeCity}
               placeholder="Město nebo okolí"
-              className="w-full bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 text-base outline-none focus:ring-2 focus:ring-[#CCFF00]"
+              className="w-full rounded-[18px] border border-gray-200 bg-white px-5 py-4 text-base outline-none focus:ring-2 focus:ring-[#ff5a1f]"
             />
-            <button className="bg-black text-white px-6 py-3 rounded-lg font-bold hover:bg-gray-800 transition-colors">
+            <button className="rounded-[18px] bg-black px-6 py-3 font-bold text-white transition-colors hover:bg-gray-800">
               Hledat
             </button>
-            <Link href="/listing/new" className="bg-[#CCFF00] text-black px-6 py-3 rounded-lg font-black text-center hover:bg-lime-300 transition-colors">
-              Přidat inzerát
+            <Link href="/listing/new" className="rounded-[18px] bg-[#ff5a1f] px-6 py-4 text-center font-black text-white transition-colors hover:bg-orange-600">
+              Přidat
             </Link>
           </form>
 
           <div className="mt-3">
-            <Link
-              href={`/mapa${activeCity ? `?city=${encodeURIComponent(activeCity)}` : ""}`}
-              className="inline-flex items-center text-sm font-bold text-gray-700 hover:text-black"
-            >
+            <Link href={`/mapa${activeCity ? `?city=${encodeURIComponent(activeCity)}` : ""}`} className="inline-flex text-sm font-bold text-gray-700 hover:text-black">
               Zobrazit nabídky na Google mapě
             </Link>
           </div>
 
-          <div className="flex overflow-x-auto gap-2 mt-5 pb-2 scrollbar-hide">
-            <Link
-              href={`/${search || activeCity ? `?${new URLSearchParams({ ...(search ? { q: search } : {}), ...(activeCity ? { city: activeCity } : {}) }).toString()}` : ""}`}
-              className={`px-4 py-2 rounded-full text-sm font-bold border shrink-0 ${!activeCategory ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-200"}`}
-            >
+          <div className="scrollbar-hide mt-5 flex gap-2 overflow-x-auto pb-2">
+            <Link href={allHref} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${!activeCategory ? "border-[#ff5a1f] bg-[#ff5a1f] text-white" : "border-gray-200 bg-white text-gray-700"}`}>
               Vše
             </Link>
             {categories.map((category) => {
@@ -159,11 +144,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 ...(activeCity ? { city: activeCity } : {}),
               }).toString()}`;
               return (
-                <Link
-                  key={category}
-                  href={href}
-                  className={`px-4 py-2 rounded-full text-sm font-bold border shrink-0 ${activeCategory === category ? "bg-black text-white border-black" : "bg-white text-gray-700 border-gray-200 hover:border-black"}`}
-                >
+                <Link key={category} href={href} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${activeCategory === category ? "border-[#ff5a1f] bg-[#ff5a1f] text-white" : "border-gray-200 bg-white text-gray-700 hover:border-black"}`}>
                   {category}
                 </Link>
               );
@@ -172,22 +153,22 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </section>
 
-      <section className="py-8 px-4">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-end justify-between mb-5">
+      <section className="px-4 py-4 sm:py-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-5 flex items-end justify-between">
             <div>
               <h2 className="text-2xl font-black">Aktuální nabídky</h2>
-              <p className="text-gray-500 text-sm mt-1">
+              <p className="mt-1 text-sm text-gray-500">
                 {error ? "Nepodařilo se načíst inzeráty." : `${listings.length} výsledků`}
               </p>
             </div>
-            <Link href="/bezpecnost" className="hidden sm:inline text-sm font-bold text-gray-600 hover:text-black">
+            <Link href="/bezpecnost" className="hidden text-sm font-bold text-gray-600 hover:text-black sm:inline">
               Jak ověřujeme bezpečnost
             </Link>
           </div>
 
           {listings.length > 0 ? (
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-5 xl:grid-cols-6">
               {listings.map((listing) => (
                 <ListingCard
                   key={listing.id}
@@ -202,12 +183,10 @@ export default async function Home({ searchParams }: HomeProps) {
               ))}
             </div>
           ) : (
-            <div className="bg-white border border-dashed border-gray-300 rounded-lg p-10 text-center">
-              <h3 className="text-xl font-black text-gray-900 mb-2">Zatím tu nic není</h3>
-              <p className="text-gray-500 mb-6">
-                Přidejte první inzerát a položte základ bezpečného bazaru.
-              </p>
-              <Link href="/listing/new" className="inline-block bg-black text-white px-6 py-3 rounded-lg font-bold">
+            <div className="rounded-[20px] border border-dashed border-gray-300 bg-white p-10 text-center">
+              <h3 className="mb-2 text-xl font-black text-gray-900">Zatím tu nic není</h3>
+              <p className="mb-6 text-gray-500">Přidejte první inzerát a položte základ bezpečného bazaru.</p>
+              <Link href="/listing/new" className="inline-block rounded-[18px] bg-black px-6 py-3 font-bold text-white">
                 Přidat první inzerát
               </Link>
             </div>
@@ -215,20 +194,14 @@ export default async function Home({ searchParams }: HomeProps) {
         </div>
       </section>
 
-      <section className="px-4 pb-12">
-        <div className="max-w-7xl mx-auto grid md:grid-cols-3 gap-4">
-          {[
-            ["Ověření inzerátu", "Skóre rizika, podezřelé fráze, extrémní cena a fotky připravené pro Neklikni kontrolu."],
-            ["Ověření prodejce", "Trust score, telefon, e-mail, historie účtu a budoucí napojení na identitu prodejce."],
-            ["Bezpečný kontakt", "Konverzace držíme v aplikaci, aby šlo včas odhalit phishing a podezřelé odkazy."],
-          ].map(([title, text]) => (
-            <div key={title} className="bg-white rounded-lg border border-gray-100 p-5">
-              <h3 className="font-black text-gray-900 mb-2">{title}</h3>
-              <p className="text-sm text-gray-500 leading-relaxed">{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
+      <Link
+        href="/listing/new"
+        className="fixed bottom-20 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#ff5a1f] text-4xl text-white shadow-xl md:hidden"
+        aria-label="Přidat inzerát"
+      >
+        +
+      </Link>
+      <BottomNav />
     </main>
   );
 }
