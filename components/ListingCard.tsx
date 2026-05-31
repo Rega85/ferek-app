@@ -3,7 +3,7 @@ import Link from "next/link";
 interface ListingCardProps {
   id: string;
   title: string;
-  price: number; // v haléřích
+  price: number;
   location: string;
   image?: string;
   isBoosted?: boolean;
@@ -21,23 +21,21 @@ export default function ListingCard({
 }: ListingCardProps) {
   const priceCZK = (price / 100).toLocaleString("cs-CZ");
 
-  const getVerdictColor = (verdict?: string) => {
-    switch (verdict) {
-      case "safe":
-        return "bg-accent text-accent-dark";
-      case "warning":
-        return "bg-warning text-white";
-      case "danger":
-        return "bg-danger text-white";
-      default:
-        return "bg-gray-500 text-white";
-    }
-  };
+  const verdictLabel = {
+    safe: "Overeno",
+    warning: "Pozor",
+    danger: "Riziko",
+  }[neklikniVerdict ?? "safe"];
+
+  const verdictColor = {
+    safe: "bg-[#CCFF00] text-black",
+    warning: "bg-amber-500 text-white",
+    danger: "bg-red-500 text-white",
+  }[neklikniVerdict ?? "safe"];
 
   return (
     <Link href={`/listing/${id}`} className="block group">
-      <div className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 relative">
-        {/* Obrázek s gradientem pro čitelnost */}
+      <article className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100">
         <div className="aspect-[4/5] bg-gray-100 relative overflow-hidden">
           {image ? (
             <img
@@ -53,32 +51,31 @@ export default function ListingCard({
               <span className="text-sm font-medium">Bez fotky</span>
             </div>
           )}
-          
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/10"></div>
 
-          {/* Top badges */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/10" />
+
           <div className="absolute top-3 left-3 right-3 flex justify-between items-start">
             {isBoosted ? (
-              <span className="bg-accent text-accent-dark text-xs font-bold px-2 py-1 rounded-md shadow-sm">
+              <span className="bg-[#CCFF00] text-black text-xs font-bold px-2 py-1 rounded-md shadow-sm">
                 TOP
               </span>
-            ) : <div />}
+            ) : (
+              <div />
+            )}
             {neklikniVerdict && (
-              <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm ${getVerdictColor(neklikniVerdict)}`}>
-                {neklikniVerdict === "safe" ? "Ověřeno" : neklikniVerdict}
+              <span className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider shadow-sm ${verdictColor}`}>
+                {verdictLabel}
               </span>
             )}
           </div>
 
-          {/* Cena (Letgo styl - velká přes fotku dole) */}
           <div className="absolute bottom-3 left-3 text-white">
             <p className="text-xl font-bold tracking-tight shadow-black/50 drop-shadow-md">
-              {priceCZK} Kč
+              {price === 0 ? "Zdarma" : `${priceCZK} Kc`}
             </p>
           </div>
         </div>
 
-        {/* Info dole */}
         <div className="p-3">
           <h3 className="font-semibold text-gray-900 line-clamp-1 text-sm">{title}</h3>
           <div className="flex items-center text-gray-500 text-xs mt-1 gap-1">
@@ -86,10 +83,10 @@ export default function ListingCard({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            <span className="truncate">{location}</span>
+            <span className="truncate">{location || "Neuvedeno"}</span>
           </div>
         </div>
-      </div>
+      </article>
     </Link>
   );
 }

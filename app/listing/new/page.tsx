@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import type { User } from '@supabase/supabase-js'
 import AppNavbar from '@/components/AppNavbar'
+import { assessListingRisk } from '@/utils/neklikni'
 
 type ListingFormData = {
   title: string
@@ -42,7 +43,6 @@ export default function NewListingPage() {
     city: '',
     isFree: false
   })
-  const [uploading, setUploading] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [errors, setErrors] = useState<Partial<ListingFormData>>({})
   const router = useRouter()
@@ -124,7 +124,7 @@ export default function NewListingPage() {
     for (const photo of photos) {
       const fileExt = photo.name.split('.').pop()
       const fileName = `${Date.now()}-${Math.random()}.${fileExt}`
-      const filePath = `listings/${user!.id}/${fileName}`
+      const filePath = `${user!.id}/${fileName}`
 
       const { error: uploadError } = await supabase.storage
         .from('listings')
@@ -179,6 +179,13 @@ export default function NewListingPage() {
 
       console.log('Uploaded photos:', uploadedPhotoUrls)
 
+      const risk = assessListingRisk({
+        title: formData.title,
+        description: formData.description,
+        price: formData.isFree ? 0 : Math.round(parseFloat(formData.price) * 100),
+        photoCount: uploadedPhotoUrls.length
+      })
+
       // Create listing
       const { data, error } = await supabase
         .from('listings')
@@ -190,7 +197,11 @@ export default function NewListingPage() {
           location_city: formData.city.trim(),
           user_id: user.id,
           images: uploadedPhotoUrls,
-          status: 'active'
+          status: 'active',
+          neklikni_score: risk.score,
+          neklikni_verdict: risk.verdict,
+          neklikni_flags: risk.flags,
+          neklikni_checked_at: new Date().toISOString()
         })
 
       console.log('Insert response data:', data)
