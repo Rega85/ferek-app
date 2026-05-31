@@ -30,7 +30,7 @@ type Seller = {
 
 const verdictConfig = {
   safe: { label: "Ověřeno", className: "bg-green-500 text-white", note: "Inzerát prošel základní bezpečnostní kontrolou." },
-  warning: { label: "Opatrně", className: "bg-amber-500 text-white", note: "Neklikni našel signály, které stojí za kontrolu." },
+  warning: { label: "Opatrně", className: "bg-yellow-400 text-slate-950", note: "Neklikni našel signály, které stojí za kontrolu." },
   danger: { label: "Riziko", className: "bg-red-500 text-white", note: "U tohoto inzerátu doporučujeme zvýšenou opatrnost." },
 };
 
@@ -76,7 +76,7 @@ export default async function ListingPage({
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
           <Link href="/" className="text-2xl sm:text-3xl font-black tracking-tight">
-            <span className="text-[#ff5a1f]">Ferek</span>
+            <span className="text-[#00BFA6]">Ferek</span>
           </Link>
           <Link href="/" className="text-gray-500 hover:text-black text-sm font-medium transition-colors">Zpět na bazar</Link>
         </div>
@@ -162,12 +162,12 @@ export default async function ListingPage({
                     defaultValue={`Dobrý den, mám zájem o inzerát "${listing.title}". Je ještě dostupný?`}
                     className="w-full min-h-28 border border-gray-200 rounded-lg p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#CCFF00]"
                   />
-                  <button className="w-full bg-[#ff5a1f] text-white font-black py-4 rounded-[18px] hover:bg-orange-600 transition-colors">
+                  <button className="w-full bg-[#00BFA6] text-white font-black py-4 rounded-[18px] hover:bg-teal-600 transition-colors">
                     Napsat prodejci
                   </button>
                 </form>
               ) : (
-                <Link href={`/auth/login?next=/listing/${listing.id}`} className="block w-full text-center bg-[#ff5a1f] text-white font-black py-4 rounded-[18px] hover:bg-orange-600 transition-colors">
+                <Link href={`/auth/login?next=/listing/${listing.id}`} className="block w-full text-center bg-[#00BFA6] text-white font-black py-4 rounded-[18px] hover:bg-teal-600 transition-colors">
                   Přihlásit se a napsat
                 </Link>
               )}

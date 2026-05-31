@@ -28,7 +28,7 @@ export default function LandingNavbar() {
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 bg-white/90 backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-5 sm:px-6">
-        <Link href="/" className="text-4xl font-black tracking-tight text-[#ff5a1f] sm:text-5xl">
+        <Link href="/" className="text-4xl font-black tracking-tight text-[#00BFA6] sm:text-5xl">
           Ferek
         </Link>
         <div className="flex items-center gap-3 sm:gap-5">
@@ -38,13 +38,13 @@ export default function LandingNavbar() {
           <Link href="/bezpecnost" className="hidden text-sm font-bold text-gray-500 transition-colors hover:text-black md:block">
             Bezpečnost
           </Link>
-          <Link href="/listing/new" className="hidden rounded-full bg-[#ff5a1f] px-5 py-2.5 text-sm font-black text-white shadow-md transition-colors hover:bg-orange-600 sm:block">
+          <Link href="/listing/new" className="hidden rounded-full bg-[#00BFA6] px-5 py-2.5 text-sm font-black text-white shadow-md transition-colors hover:bg-teal-600 sm:block">
             Prodat
           </Link>
 
           {ready && (
             user ? (
-              <Link href="/profile" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ff5a1f] text-sm font-black text-white transition-transform hover:scale-105">
+              <Link href="/profile" className="flex h-10 w-10 items-center justify-center rounded-full bg-[#00BFA6] text-sm font-black text-white transition-transform hover:scale-105">
                 {initials}
               </Link>
             ) : (

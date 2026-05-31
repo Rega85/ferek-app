@@ -47,7 +47,7 @@ export default function ListingCard({
           </div>
 
           {isBoosted ? (
-            <div className="absolute right-4 top-4 rounded-lg bg-[#ff5a1f] px-2.5 py-1 text-xs font-black text-white shadow">
+            <div className="absolute right-4 top-4 rounded-lg bg-[#00BFA6] px-2.5 py-1 text-xs font-black text-white shadow">
               TOP
             </div>
           ) : null}

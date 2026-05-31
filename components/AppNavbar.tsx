@@ -42,7 +42,7 @@ export default function AppNavbar() {
   return (
     <nav className="fixed left-0 right-0 top-0 z-50 border-b border-gray-200/50 bg-white/90 shadow-sm backdrop-blur-md">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
-        <Link href="/" className="text-3xl font-black tracking-tight text-[#ff5a1f] sm:text-4xl">
+        <Link href="/" className="text-3xl font-black tracking-tight text-[#00BFA6] sm:text-4xl">
           Ferek
         </Link>
 
@@ -50,7 +50,7 @@ export default function AppNavbar() {
           <Link href="/mapa" className="hidden text-sm font-bold text-gray-600 transition-colors hover:text-black md:block">
             Mapa
           </Link>
-          <Link href="/listing/new" className="flex items-center gap-1.5 rounded-full bg-[#ff5a1f] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-orange-600">
+          <Link href="/listing/new" className="flex items-center gap-1.5 rounded-full bg-[#00BFA6] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-teal-600">
             <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" /></svg>
             <span className="hidden sm:inline">Prodat</span>
           </Link>
@@ -83,7 +83,7 @@ export default function AppNavbar() {
           ) : (
             <div className="flex items-center gap-3">
               <Link href="/auth/login" className="hidden text-sm font-medium text-gray-600 hover:text-black sm:block">Přihlásit</Link>
-              <Link href="/auth/register" className="rounded-full bg-[#ff5a1f] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-orange-600">Registrovat</Link>
+              <Link href="/auth/register" className="rounded-full bg-[#00BFA6] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-teal-600">Registrovat</Link>
             </div>
           )}
         </div>

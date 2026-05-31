@@ -26,9 +26,11 @@ Vercel i lokalni vyvoj potrebuji tyto promenne:
 ```bash
 NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_ANON_KEY=
+NEXT_PUBLIC_GOOGLE_CLIENT_ID=
 ```
 
 Hodnoty nastav ve Vercelu v `Project Settings -> Environment Variables`. Pro lokalni vyvoj je uloz do `.env.local`.
+`NEXT_PUBLIC_GOOGLE_CLIENT_ID` je priprava pro Google One Tap. Bezne Google prihlaseni ted bezi pres Supabase OAuth provider.
 
 ## Deploy na Vercel
 

@@ -57,14 +57,14 @@ export default function RegisterForm() {
     if (error) setError(error.message)
   }
 
-  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#CCFF00] focus:border-transparent bg-gray-50 text-gray-900 placeholder:text-gray-400"
+  const inputCls = "w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#00BFA6] focus:border-transparent bg-gray-50 text-gray-900 placeholder:text-gray-400"
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <Link href="/" className="text-4xl font-black tracking-tight inline-block">
-            Férek<span className="text-[#CCFF00]">.</span>
+          <Link href="/" className="text-5xl font-black tracking-tight inline-block text-[#00BFA6]">
+            Ferek
           </Link>
           <p className="text-gray-500 mt-2">Vytvořte si účet zdarma</p>
         </div>
@@ -120,7 +120,7 @@ export default function RegisterForm() {
             </div>
 
             <button type="submit" disabled={loading}
-              className="w-full bg-black text-white py-3.5 rounded-xl font-bold hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mt-2">
+              className="w-full bg-[#00BFA6] text-white py-3.5 rounded-xl font-bold hover:bg-teal-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-base mt-2">
               {loading ? 'Vytváření účtu...' : 'Vytvořit účet'}
             </button>
 

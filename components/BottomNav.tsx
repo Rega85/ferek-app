@@ -11,7 +11,7 @@ export default function BottomNav() {
           { href: "/profile", label: "Profil", icon: "♙" },
         ].map((item) => (
           <Link key={item.href} href={item.href} className="flex flex-col items-center justify-center gap-0.5 text-xs font-semibold text-gray-500">
-            <span className="text-2xl leading-none text-[#ff5a1f]">{item.icon}</span>
+            <span className="text-2xl leading-none text-[#00BFA6]">{item.icon}</span>
             {item.label}
           </Link>
         ))}

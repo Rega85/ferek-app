@@ -84,7 +84,7 @@ export default async function Home({ searchParams }: HomeProps) {
             <div className="hidden rounded-[20px] bg-black p-5 text-white lg:block">
               <div className="mb-4 flex items-center justify-between">
                 <h2 className="text-lg font-black">Bezpečnostní stav</h2>
-                <span className="rounded-lg bg-[#ff5a1f] px-2 py-1 text-xs font-black text-white">Neklikni</span>
+                <span className="rounded-lg bg-[#00BFA6] px-2 py-1 text-xs font-black text-white">Neklikni</span>
               </div>
               <div className="grid grid-cols-3 gap-3 text-center">
                 <div>
@@ -109,7 +109,7 @@ export default async function Home({ searchParams }: HomeProps) {
               name="q"
               defaultValue={search}
               placeholder="Co hledáte?"
-              className="w-full rounded-[18px] border border-gray-200 bg-white px-5 py-4 text-base outline-none focus:ring-2 focus:ring-[#ff5a1f]"
+              className="w-full rounded-[18px] border border-gray-200 bg-white px-5 py-4 text-base outline-none focus:ring-2 focus:ring-[#00BFA6]"
             />
             {activeCategory ? <input type="hidden" name="category" value={activeCategory} /> : null}
             <input
@@ -117,12 +117,12 @@ export default async function Home({ searchParams }: HomeProps) {
               name="city"
               defaultValue={activeCity}
               placeholder="Město nebo okolí"
-              className="w-full rounded-[18px] border border-gray-200 bg-white px-5 py-4 text-base outline-none focus:ring-2 focus:ring-[#ff5a1f]"
+              className="w-full rounded-[18px] border border-gray-200 bg-white px-5 py-4 text-base outline-none focus:ring-2 focus:ring-[#00BFA6]"
             />
             <button className="rounded-[18px] bg-black px-6 py-3 font-bold text-white transition-colors hover:bg-gray-800">
               Hledat
             </button>
-            <Link href="/listing/new" className="rounded-[18px] bg-[#ff5a1f] px-6 py-4 text-center font-black text-white transition-colors hover:bg-orange-600">
+            <Link href="/listing/new" className="rounded-[18px] bg-[#00BFA6] px-6 py-4 text-center font-black text-white transition-colors hover:bg-teal-600">
               Přidat
             </Link>
           </form>
@@ -134,7 +134,7 @@ export default async function Home({ searchParams }: HomeProps) {
           </div>
 
           <div className="scrollbar-hide mt-5 flex gap-2 overflow-x-auto pb-2">
-            <Link href={allHref} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${!activeCategory ? "border-[#ff5a1f] bg-[#ff5a1f] text-white" : "border-gray-200 bg-white text-gray-700"}`}>
+            <Link href={allHref} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${!activeCategory ? "border-[#00BFA6] bg-[#00BFA6] text-white" : "border-gray-200 bg-white text-gray-700"}`}>
               Vše
             </Link>
             {categories.map((category) => {
@@ -144,7 +144,7 @@ export default async function Home({ searchParams }: HomeProps) {
                 ...(activeCity ? { city: activeCity } : {}),
               }).toString()}`;
               return (
-                <Link key={category} href={href} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${activeCategory === category ? "border-[#ff5a1f] bg-[#ff5a1f] text-white" : "border-gray-200 bg-white text-gray-700 hover:border-black"}`}>
+                <Link key={category} href={href} className={`shrink-0 rounded-full border px-4 py-2 text-sm font-bold ${activeCategory === category ? "border-[#00BFA6] bg-[#00BFA6] text-white" : "border-gray-200 bg-white text-gray-700 hover:border-black"}`}>
                   {category}
                 </Link>
               );
@@ -196,7 +196,7 @@ export default async function Home({ searchParams }: HomeProps) {
 
       <Link
         href="/listing/new"
-        className="fixed bottom-20 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#ff5a1f] text-4xl text-white shadow-xl md:hidden"
+        className="fixed bottom-20 right-6 z-50 flex h-16 w-16 items-center justify-center rounded-full bg-[#00BFA6] text-4xl text-white shadow-xl md:hidden"
         aria-label="Přidat inzerát"
       >
         +
