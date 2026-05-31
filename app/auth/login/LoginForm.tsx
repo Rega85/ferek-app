@@ -1,23 +1,111 @@
 'use client'
 
-import { useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
+import Script from 'next/script'
 import Link from 'next/link'
 import { createClient } from '@/utils/supabase/client'
+
+type GoogleCredentialResponse = {
+  credential?: string
+}
+
+type GooglePromptMomentNotification = {
+  isNotDisplayed: () => boolean
+  getNotDisplayedReason: () => string
+  isSkippedMoment: () => boolean
+  getSkippedReason: () => string
+  isDismissedMoment: () => boolean
+  getDismissedReason: () => string
+}
+
+declare global {
+  interface Window {
+    google?: {
+      accounts: {
+        id: {
+          initialize: (config: {
+            client_id: string
+            callback: (response: GoogleCredentialResponse) => void
+            ux_mode?: 'popup' | 'redirect'
+          }) => void
+          prompt: (callback?: (notification: GooglePromptMomentNotification) => void) => void
+          cancel: () => void
+        }
+      }
+    }
+  }
+}
 
 export default function LoginForm() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [loading, setLoading] = useState<'google' | 'magic' | 'password' | null>(null)
+  const [loading, setLoading] = useState<'google' | 'onetap' | 'magic' | 'password' | null>(null)
   const [showPassword, setShowPassword] = useState(false)
+  const [googleScriptReady, setGoogleScriptReady] = useState(false)
+  const oneTapInitializedRef = useRef(false)
   const router = useRouter()
   const searchParams = useSearchParams()
   const next = searchParams.get('next') || '/'
-  const supabase = createClient()
+  const supabase = useMemo(() => createClient(), [])
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID
 
   const redirectTo = () => `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`
+
+  const handleOneTapCredential = useCallback(async (response: GoogleCredentialResponse) => {
+    if (!response.credential) {
+      setError('Google One Tap nevrátil přihlašovací token')
+      return
+    }
+
+    setLoading('onetap')
+    setError('')
+    setSuccess('')
+
+    const { error } = await supabase.auth.signInWithIdToken({
+      provider: 'google',
+      token: response.credential,
+    })
+
+    if (error) {
+      setError(error.message)
+      setLoading(null)
+      return
+    }
+
+    router.push(next)
+    router.refresh()
+  }, [next, router, supabase])
+
+  useEffect(() => {
+    if (!googleClientId || !googleScriptReady || oneTapInitializedRef.current || !window.google) return
+
+    oneTapInitializedRef.current = true
+    window.google.accounts.id.initialize({
+      client_id: googleClientId,
+      ux_mode: 'popup',
+      callback: handleOneTapCredential,
+    })
+
+    window.google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed()) {
+        console.info('Google One Tap not displayed:', notification.getNotDisplayedReason())
+      }
+      if (notification.isSkippedMoment()) {
+        console.info('Google One Tap skipped:', notification.getSkippedReason())
+      }
+      if (notification.isDismissedMoment()) {
+        console.info('Google One Tap dismissed:', notification.getDismissedReason())
+      }
+    })
+
+    return () => {
+      window.google?.accounts.id.cancel()
+      oneTapInitializedRef.current = false
+    }
+  }, [googleClientId, googleScriptReady, handleOneTapCredential])
 
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -74,7 +162,15 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center px-4 py-12">
+    <>
+      {googleClientId && (
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+          onLoad={() => setGoogleScriptReady(true)}
+        />
+      )}
+      <div className="min-h-screen bg-white flex items-center justify-center px-4 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <Link href="/" className="text-5xl font-black tracking-tight inline-block text-[#00BFA6]">
@@ -95,7 +191,7 @@ export default function LoginForm() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            {loading === 'google' ? 'Přesměrování...' : 'Pokračovat přes Google'}
+            {loading === 'google' || loading === 'onetap' ? 'Přihlašování...' : 'Pokračovat přes Google'}
           </button>
 
           <form onSubmit={handleMagicLink} className="space-y-3">
@@ -164,6 +260,7 @@ export default function LoginForm() {
           <Link href={`/auth/register${next !== '/' ? `?next=${encodeURIComponent(next)}` : ''}`} className="text-black font-semibold hover:underline">Zaregistrujte se</Link>
         </p>
       </div>
-    </div>
+      </div>
+    </>
   )
 }

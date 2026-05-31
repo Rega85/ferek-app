@@ -30,7 +30,7 @@ NEXT_PUBLIC_GOOGLE_CLIENT_ID=
 ```
 
 Hodnoty nastav ve Vercelu v `Project Settings -> Environment Variables`. Pro lokalni vyvoj je uloz do `.env.local`.
-`NEXT_PUBLIC_GOOGLE_CLIENT_ID` je priprava pro Google One Tap. Bezne Google prihlaseni ted bezi pres Supabase OAuth provider.
+`NEXT_PUBLIC_GOOGLE_CLIENT_ID` aktivuje Google One Tap na prihlasovaci strance. Bez nej zustane k dispozici klasicke Google prihlaseni pres Supabase OAuth provider.
 
 ## Deploy na Vercel
 
