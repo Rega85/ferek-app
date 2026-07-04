@@ -19,6 +19,8 @@ type GooglePromptMomentNotification = {
   getDismissedReason: () => string
 }
 
+type OAuthProvider = 'google' | 'facebook'
+
 declare global {
   interface Window {
     google?: {
@@ -42,7 +44,7 @@ export default function LoginForm() {
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
-  const [loading, setLoading] = useState<'google' | 'onetap' | 'magic' | 'password' | null>(null)
+  const [loading, setLoading] = useState<'google' | 'facebook' | 'onetap' | 'magic' | 'password' | null>(null)
   const [showPassword, setShowPassword] = useState(false)
   const [googleScriptReady, setGoogleScriptReady] = useState(false)
   const oneTapInitializedRef = useRef(false)
@@ -145,18 +147,50 @@ export default function LoginForm() {
     }
   }
 
-  const handleGoogleLogin = async () => {
-    setLoading('google')
+  const handleOAuthLogin = async (provider: OAuthProvider) => {
+    setLoading(provider)
     setError('')
     setSuccess('')
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
-      options: {
-        redirectTo: redirectTo(),
-      },
-    })
-    if (error) {
-      setError(error.message)
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: redirectTo(),
+        },
+      })
+      if (error) {
+        setError(error.message)
+        setLoading(null)
+      }
+    } catch {
+      setError('Přihlášení se nepodařilo spustit. Zkontrolujte Supabase URL a nastavení OAuth provideru.')
+      setLoading(null)
+    }
+  }
+
+  const handleSeznamMagicLink = async () => {
+    setError('')
+    setSuccess('')
+
+    if (!email.trim()) {
+      setError('Pro přihlášení přes Seznam zadejte svůj Seznam e-mail a pošleme vám bezpečný odkaz.')
+      return
+    }
+
+    setLoading('magic')
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: redirectTo(),
+          shouldCreateUser: true,
+        },
+      })
+      if (error) setError(error.message)
+      else setSuccess('Poslali jsme vám přihlašovací odkaz na e-mail. Funguje i pro Seznam.cz účet.')
+    } catch {
+      setError('Nepodařilo se odeslat přihlašovací odkaz')
+    } finally {
       setLoading(null)
     }
   }
@@ -180,11 +214,12 @@ export default function LoginForm() {
         </div>
 
         <div className="bg-white rounded-[24px] shadow-sm border border-gray-100 p-6 sm:p-8">
-          <button
-            onClick={handleGoogleLogin}
-            disabled={loading !== null}
-            className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white text-gray-800 py-3.5 rounded-[18px] font-black hover:bg-gray-50 transition-colors disabled:opacity-50 mb-4"
-          >
+          <div className="space-y-3 mb-4">
+            <button
+              onClick={() => handleOAuthLogin('google')}
+              disabled={loading !== null}
+              className="w-full flex items-center justify-center gap-3 border border-gray-200 bg-white text-gray-800 py-3.5 rounded-[18px] font-black hover:bg-gray-50 transition-colors disabled:opacity-50"
+            >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -192,7 +227,17 @@ export default function LoginForm() {
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
             {loading === 'google' || loading === 'onetap' ? 'Přihlašování...' : 'Pokračovat přes Google'}
-          </button>
+            </button>
+
+            <button
+              onClick={() => handleOAuthLogin('facebook')}
+              disabled={loading !== null}
+              className="w-full flex items-center justify-center gap-3 border border-[#1877F2]/20 bg-[#1877F2] text-white py-3.5 rounded-[18px] font-black hover:bg-[#166FE5] transition-colors disabled:opacity-50"
+            >
+              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-sm font-black text-[#1877F2]">f</span>
+              {loading === 'facebook' ? 'Přihlašování...' : 'Pokračovat přes Facebook'}
+            </button>
+          </div>
 
           <form onSubmit={handleMagicLink} className="space-y-3">
             {error && <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm">{error}</div>}
@@ -217,6 +262,15 @@ export default function LoginForm() {
               className="w-full bg-[#00BFA6] text-white py-3.5 rounded-[18px] font-black hover:bg-teal-600 transition-colors disabled:opacity-50"
             >
               {loading === 'magic' ? 'Odesílání...' : 'Poslat magic link'}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleSeznamMagicLink}
+              disabled={loading !== null}
+              className="w-full border border-[#CC0033]/20 bg-white text-[#CC0033] py-3.5 rounded-[18px] font-black hover:bg-red-50 transition-colors disabled:opacity-50"
+            >
+              Přihlásit přes Seznam e-mail
             </button>
           </form>
 

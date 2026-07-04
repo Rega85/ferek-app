@@ -46,3 +46,22 @@ Projekt je pripraveny na Git deploy pres Vercel:
 ## Supabase
 
 Databazove migrace jsou ve slozce `supabase/migrations`. Storage bucket pro obrazky inzeratu se jmenuje `listings`.
+
+## Prihlaseni
+
+Aktualni prihlaseni podporuje:
+
+- Google pres Supabase OAuth
+- Facebook pres Supabase OAuth
+- magic link pro e-mail, vcetne Seznam.cz adres
+- volitelne Google One Tap pri nastaveni `NEXT_PUBLIC_GOOGLE_CLIENT_ID`
+
+V Supabase zapni providery v `Authentication -> Providers` a vypln jejich Client ID a Client Secret. Do `Authentication -> URL Configuration` pridej redirect URL:
+
+```text
+https://tvoje-domena.cz/auth/callback
+https://ferek-app-git-main-nekliniczs-projects.vercel.app/auth/callback
+http://localhost:3000/auth/callback
+```
+
+Seznam neni v Supabase mezi nativnimi social providery. Pro plne "Prihlasit pres Seznam" bude potreba bud custom OAuth/OIDC provider, nebo vlastni serverova OAuth integrace. Do te doby tlacitko "Seznam e-mail" pouziva bezpecny magic link.
