@@ -19,19 +19,21 @@ export default function PrivacyPage() {
       <p>Zpracováváme pouze údaje nezbytné pro provoz služby:</p>
       <ul>
         <li>E-mailová adresa (pro přihlášení a komunikaci)</li>
+        <li>Jméno a telefonní číslo (pro účet prodejce a kontrolu proti podvodům)</li>
         <li>Fakturační údaje (při využití placených služeb)</li>
         <li>Záznamy o použití služby (publikované inzeráty, komunikace)</li>
       </ul>
       <p>
-        Analyzované texty a obrázky inzerátů nejsou trvale ukládány a nejsou sdíleny s třetími stranami 
-        mimo zpracování analýzy. Nahrané fotografie mohou obsahovat osobní údaje třetích stran — 
-        tyto údaje jsou zpracovány výhradně za účelem analýzy a nejsou po jejím dokončení uchovávány.
+        Texty a fotografie inzerátů ukládáme po dobu zveřejnění inzerátu, protože jsou jeho součástí. 
+        Fotografie jsou veřejně dostupné. Nenahrávejte proto fotky, na kterých jsou jiní lidé nebo osobní doklady. 
+        Telefon a další kontaktní údaje z inzerátů a zpráv porovnáváme s databází Neklikni.cz, 
+        kterou provozuje stejný správce (PK Virgine, s.r.o.).
       </p>
 
       <h2>3. Účel zpracování</h2>
       <ul>
         <li>Poskytování a provoz služby Férek</li>
-        <li>Automatické ověřování inzerátů technologií Neklikni</li>
+        <li>Kontrola kontaktních údajů v inzerátech a zprávách v databázi Neklikni.cz</li>
         <li>Správa uživatelského účtu</li>
         <li>Zpracování plateb a vystavení daňových dokladů</li>
         <li>Zákaznická podpora</li>
@@ -47,8 +49,7 @@ export default function PrivacyPage() {
       <h2>5. Příjemci osobních údajů</h2>
       <p>Vaše údaje sdílíme pouze s důvěryhodnými zpracovateli nutnými pro provoz služby:</p>
       <ul>
-        <li><strong>Supabase</strong> — autentizace a databáze (USA, Standard Contractual Clauses)</li>
-        <li><strong>Anthropic</strong> — AI analýza inzerátů (USA, Standard Contractual Clauses)</li>
+        <li><strong>Supabase</strong> — autentizace, databáze a úložiště fotek (servery v EU)</li>
         <li><strong>Vercel</strong> — hosting aplikace (USA, Standard Contractual Clauses)</li>
       </ul>
 

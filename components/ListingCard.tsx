@@ -7,7 +7,6 @@ interface ListingCardProps {
   location: string;
   image?: string;
   isBoosted?: boolean;
-  neklikniVerdict?: "safe" | "warning" | "danger";
 }
 
 export default function ListingCard({
@@ -17,7 +16,6 @@ export default function ListingCard({
   location,
   image,
   isBoosted,
-  neklikniVerdict,
 }: ListingCardProps) {
   const priceCZK = (price / 100).toLocaleString("cs-CZ");
 
@@ -52,12 +50,6 @@ export default function ListingCard({
             </div>
           ) : null}
 
-          {neklikniVerdict ? (
-            <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-white px-3 py-2 text-sm font-bold text-gray-900 shadow-lg">
-              <span className="flex h-5 w-5 items-center justify-center rounded-full bg-gray-900 text-[10px] text-white">✓</span>
-              Neklikni
-            </div>
-          ) : null}
         </div>
 
         <div className="bg-white p-3 sm:p-4">

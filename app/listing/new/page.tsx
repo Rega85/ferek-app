@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/utils/supabase/client'
 import type { User } from '@supabase/supabase-js'
 import AppNavbar from '@/components/AppNavbar'
-import { assessListingRisk } from '@/utils/neklikni'
+import { getSellerTips } from '@/utils/sellerTips'
 
 type ListingFormData = {
   title: string
@@ -180,23 +180,11 @@ export default function NewListingPage() {
 
     setSubmitting(true)
     try {
-      console.log('User ID:', user.id)
-      console.log('Form data:', formData)
-
       // Upload photos first
       const uploadedPhotoUrls = await uploadPhotos()
 
-      console.log('Uploaded photos:', uploadedPhotoUrls)
-
-      const risk = assessListingRisk({
-        title: formData.title,
-        description: formData.description,
-        price: formData.isFree ? 0 : Math.round(parseFloat(formData.price) * 100),
-        photoCount: uploadedPhotoUrls.length
-      })
-
-      // Create listing
-      const { data, error } = await supabase
+      // Create listing. Kontrolu Neklikni zapisuje jen server (F1), klient ji nesmí nastavit.
+      const { error } = await supabase
         .from('listings')
         .insert({
           title: formData.title.trim(),
@@ -206,15 +194,8 @@ export default function NewListingPage() {
           location_city: formData.city.trim(),
           user_id: user.id,
           images: uploadedPhotoUrls,
-          status: 'active',
-          neklikni_score: risk.score,
-          neklikni_verdict: risk.verdict,
-          neklikni_flags: risk.flags,
-          neklikni_checked_at: new Date().toISOString()
+          status: 'active'
         })
-
-      console.log('Insert response data:', data)
-      console.log('Insert error:', error)
 
       if (error) {
         const message = error.message || 'Neznámá chyba při vkládání inzerátu'
@@ -243,6 +224,13 @@ export default function NewListingPage() {
     setCurrentStep(currentStep - 1)
     setErrors({})
   }
+
+  const sellerTips = getSellerTips({
+    title: formData.title,
+    description: formData.description,
+    priceCZK: formData.isFree ? 0 : parseFloat(formData.price) || 0,
+    photoCount: photos.length
+  })
 
   if (loading) {
     return (
@@ -499,6 +487,17 @@ export default function NewListingPage() {
                 </div>
               </div>
             </div>
+
+            {sellerTips.length > 0 && (
+              <div className="bg-white border border-gray-200 p-5 rounded-lg">
+                <h3 className="font-semibold text-gray-900 mb-2">Tipy pro lepší inzerát</h3>
+                <ul className="space-y-1.5 text-sm text-gray-600 list-disc pl-5">
+                  {sellerTips.map((tip) => (
+                    <li key={tip}>{tip}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             <div className="flex justify-between">
               <button

@@ -16,11 +16,9 @@ type ConversationRow = {
   } | null;
   buyer: {
     full_name: string | null;
-    email: string | null;
   } | null;
   seller: {
     full_name: string | null;
-    email: string | null;
   } | null;
 };
 
@@ -46,8 +44,8 @@ export default async function ChatPage() {
       seller_id,
       last_message_at,
       listing:listings(id,title,price,images),
-      buyer:users!conversations_buyer_id_fkey(full_name,email),
-      seller:users!conversations_seller_id_fkey(full_name,email)
+      buyer:users!conversations_buyer_id_fkey(full_name),
+      seller:users!conversations_seller_id_fkey(full_name)
     `)
     .or(`buyer_id.eq.${user.id},seller_id.eq.${user.id}`)
     .order("last_message_at", { ascending: false });
@@ -116,7 +114,7 @@ export default async function ChatPage() {
                         </span>
                       </div>
                       <p className="text-sm text-gray-500 truncate">
-                        {otherPerson?.full_name || otherPerson?.email || "Uživatel"}
+                        {otherPerson?.full_name || "Uživatel"}
                       </p>
                       <p className="text-sm text-gray-700 truncate mt-1">
                         {latest?.content ?? "Konverzace založena."}

@@ -18,9 +18,9 @@ export default function TermsPage() {
       <h2>2. Popis služby</h2>
       <p>
         Férek je online tržiště (marketplace) umožňující uživatelům inzerovat a prodávat zboží. 
-        Součástí služby je automatické ověřování inzerátů technologií Neklikni, která využívá umělou inteligenci 
-        k detekci potenciálních podvodů. Výsledky ověřování mají výhradně informativní charakter 
-        a nepředstavují právní, bezpečnostní ani odborné poradenství.
+        Součástí služby je porovnání kontaktních údajů v inzerátech a zprávách s databází hlášení Neklikni.cz. 
+        Výsledek kontroly má výhradně informativní charakter, nezaručuje poctivost žádného uživatele 
+        a nepředstavuje právní, bezpečnostní ani odborné poradenství.
       </p>
 
       <h2>3. Registrace a uživatelský účet</h2>
@@ -49,7 +49,7 @@ export default function TermsPage() {
       <h2>5. Poplatky</h2>
       <p>
         Základní inzerování na Férek je zdarma. Provozovatel si vyhrazuje právo zavést 
-        placené prémiové funkce (zvýraznění inzerátu, prioritní ověření apod.). 
+        placené prémiové funkce (topování a zvýraznění inzerátu, ověření prodejce apod.). 
         O zavedení nových poplatků bude uživatel informován předem.
       </p>
 
@@ -57,8 +57,8 @@ export default function TermsPage() {
       <p>
         Férek je zprostředkovatel — není stranou transakce mezi kupujícím a prodávajícím. 
         Provozovatel nenese odpovědnost za kvalitu, stav ani dodání zboží. 
-        Analýzy prováděné technologií Neklikni jsou generovány umělou inteligencí a mohou obsahovat nepřesnosti. 
-        Provozovatel nenese odpovědnost za žádné škody vzniklé na základě výsledků analýzy.
+        Kontrola přes Neklikni.cz vychází z hlášení uživatelů a veřejných seznamů a může být neúplná nebo nepřesná. 
+        Provozovatel nenese odpovědnost za žádné škody vzniklé na základě výsledků kontroly.
       </p>
 
       <h2>7. Ochrana osobních údajů</h2>

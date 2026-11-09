@@ -16,12 +16,12 @@ export default function AboutPage() {
       </p>
       <p>
         Jsme tým z <strong>PK Virgine, s.r.o.</strong>, stejná společnost, která stojí za projektem 
-        <a href="https://neklikni.cz" target="_blank" rel="noopener noreferrer"> NeKlikni.cz</a> — AI nástrojem 
-        na detekci podvodů, který chrání tisíce Čechů před phishingem a online podvody.
+        <a href="https://neklikni.cz" target="_blank" rel="noopener noreferrer"> NeKlikni.cz</a> — databází 
+        nahlášených podvodů, která pomáhá lidem rozpoznat phishing a online podvody.
       </p>
       <p>
-        Technologii Neklikni jsme integrovali přímo do Férek. Každý inzerát prochází automatickou kontrolou, 
-        která odhalí podezřelé nabídky ještě předtím, než na ně kliknete. 
+        Férek je na Neklikni.cz napojený. Kontaktní údaje v inzerátech a zprávách porovnáváme s databází hlášení 
+        a varujeme vás dřív, než pošlete peníze. 
         Proto se jmenujeme <strong>Férek</strong> — protože tady to chodí férově.
       </p>
 
@@ -33,8 +33,8 @@ export default function AboutPage() {
 
       <h2>Hodnoty</h2>
       <ul>
-        <li><strong>Bezpečnost na prvním místě</strong> — Každý inzerát prověřujeme technologií Neklikni</li>
-        <li><strong>Transparentnost</strong> — Jasně komunikujeme rizika a verdikty</li>
+        <li><strong>Bezpečnost na prvním místě</strong> — Údaje v inzerátech kontrolujeme v databázi Neklikni.cz</li>
+        <li><strong>Transparentnost</strong> — Říkáme, co jsme zkontrolovali a co ne</li>
         <li><strong>Jednoduchost</strong> — Prodej by měl být snadný jako vyfocení fotky</li>
         <li><strong>Férovost</strong> — Žádné skryté poplatky, žádné triky</li>
       </ul>
