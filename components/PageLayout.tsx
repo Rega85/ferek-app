@@ -53,7 +53,7 @@ export default function PageLayout({
             <div>
               <h3 className="text-2xl font-black mb-4">Férek<span className="text-[#CCFF00]">.</span></h3>
               <p className="text-gray-500 text-sm leading-relaxed">
-                Férové tržiště, kde vás nenapálí. S technologií Neklikni nakupujete bezpečně.
+                Bazar bez podvodníků. Údaje v inzerátech kontrolujeme přes Neklikni.cz.
               </p>
             </div>
             <div>
@@ -83,7 +83,7 @@ export default function PageLayout({
           </div>
           <div className="border-t border-gray-800 pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-gray-600 text-sm">© 2025 Férek. Všechna práva vyhrazena.</p>
-            <p className="text-gray-700 text-xs">Chráněno technologií <span className="text-[#CCFF00] font-bold">Neklikni</span></p>
+            <p className="text-gray-700 text-xs">Kontrola přes <span className="text-[#CCFF00] font-bold">Neklikni.cz</span></p>
           </div>
         </div>
       </footer>

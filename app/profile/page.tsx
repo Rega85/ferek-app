@@ -13,8 +13,6 @@ type Listing = {
   price: number
   images: string[] | null
   status: 'active' | 'sold' | 'deleted' | 'paused'
-  neklikni_score: number | null
-  neklikni_verdict: 'safe' | 'warning' | 'danger' | null
   created_at: string
 }
 
@@ -40,7 +38,7 @@ export default function ProfilePage() {
       setUser(session.user)
       const { data } = await supabase
         .from('listings')
-        .select('id, title, price, images, status, neklikni_score, neklikni_verdict, created_at')
+        .select('id, title, price, images, status, created_at')
         .eq('user_id', session.user.id)
         .neq('status', 'deleted')
         .order('created_at', { ascending: false })
@@ -78,7 +76,6 @@ export default function ProfilePage() {
 
   const activeCount = listings.filter(listing => listing.status === 'active').length
   const soldCount = listings.filter(listing => listing.status === 'sold').length
-  const verifiedCount = listings.filter(listing => listing.neklikni_verdict === 'safe').length
 
   return (
     <>
@@ -94,18 +91,17 @@ export default function ProfilePage() {
               </div>
               <button onClick={handleLogout} className="text-sm text-red-500 hover:text-red-700 font-bold hidden sm:block">Odhlásit se</button>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div className="bg-gray-50 rounded-lg p-4"><p className="text-2xl font-black">{listings.length}</p><p className="text-xs text-gray-500">Inzerátů celkem</p></div>
               <div className="bg-gray-50 rounded-lg p-4"><p className="text-2xl font-black">{activeCount}</p><p className="text-xs text-gray-500">Aktivních</p></div>
               <div className="bg-gray-50 rounded-lg p-4"><p className="text-2xl font-black">{soldCount}</p><p className="text-xs text-gray-500">Prodaných</p></div>
-              <div className="bg-black text-white rounded-lg p-4"><p className="text-2xl font-black">{verifiedCount}</p><p className="text-xs text-gray-400">Ověřených</p></div>
             </div>
           </section>
 
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-black">Moje inzeráty</h2>
-              <p className="text-sm text-gray-500">Správa stavu nabídky a bezpečnostní kontrola.</p>
+              <p className="text-sm text-gray-500">Správa stavu nabídky.</p>
             </div>
             <Link href="/listing/new" className="bg-black text-white px-5 py-2.5 rounded-lg text-sm font-bold hover:bg-gray-800 transition-colors">Přidat</Link>
           </div>
@@ -133,12 +129,6 @@ export default function ProfilePage() {
                   <div className="p-4">
                     <Link href={`/listing/${listing.id}`} className="font-bold text-gray-900 line-clamp-1 hover:underline">{listing.title}</Link>
                     <p className="text-lg font-black mt-1">{listing.price === 0 ? 'Zdarma' : `${(listing.price / 100).toLocaleString('cs-CZ')} Kč`}</p>
-                    <div className="flex items-center justify-between mt-3 text-sm">
-                      <span className="text-gray-500">Neklikni</span>
-                      <span className={`font-black ${
-                        listing.neklikni_verdict === 'danger' ? 'text-red-600' : listing.neklikni_verdict === 'warning' ? 'text-amber-600' : 'text-green-600'
-                      }`}>{listing.neklikni_score ?? '-'} / 100</span>
-                    </div>
                     <div className="grid grid-cols-2 gap-2 mt-4">
                       {listing.status !== 'active' && (
                         <button disabled={updatingId === listing.id} onClick={() => updateListingStatus(listing.id, 'active')} className="bg-[#CCFF00] text-black rounded-lg py-2 text-sm font-bold disabled:opacity-50">Aktivovat</button>

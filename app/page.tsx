@@ -13,7 +13,6 @@ type Listing = {
   location_city: string | null;
   images: string[] | null;
   is_boosted: boolean;
-  neklikni_verdict: "safe" | "warning" | "danger" | null;
   created_at: string;
 };
 
@@ -46,7 +45,7 @@ export default async function Home({ searchParams }: HomeProps) {
   const supabase = await createClient();
   let query = supabase
     .from("listings")
-    .select("id,title,description,price,category,location_city,images,is_boosted,neklikni_verdict,created_at")
+    .select("id,title,description,price,category,location_city,images,is_boosted,created_at")
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(48);
@@ -64,7 +63,6 @@ export default async function Home({ searchParams }: HomeProps) {
     const haystack = `${listing.title} ${listing.description ?? ""} ${listing.location_city ?? ""}`.toLocaleLowerCase("cs-CZ");
     return haystack.includes(search.toLocaleLowerCase("cs-CZ"));
   });
-  const verifiedCount = listings.filter((listing) => listing.neklikni_verdict === "safe").length;
   const allHref = `/${search || activeCity ? `?${new URLSearchParams({ ...(search ? { q: search } : {}), ...(activeCity ? { city: activeCity } : {}) }).toString()}` : ""}`;
 
   return (
@@ -77,30 +75,19 @@ export default async function Home({ searchParams }: HomeProps) {
             <div>
               <h1 className="sr-only">Ferek bazar</h1>
               <p className="max-w-2xl text-base text-gray-500 sm:text-lg">
-                Bezpečný bazar ve stylu Letgo. Velké fotky, nabídky v okolí a Neklikni ochrana u každého důležitého kroku.
+                Bazar bez podvodníků. Velké fotky, nabídky v okolí a kontrola přes Neklikni.cz.
               </p>
             </div>
 
-            <div className="hidden rounded-[20px] bg-black p-5 text-white lg:block">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-black">Bezpečnostní stav</h2>
-                <span className="rounded-lg bg-[#00BFA6] px-2 py-1 text-xs font-black text-white">Neklikni</span>
-              </div>
-              <div className="grid grid-cols-3 gap-3 text-center">
-                <div>
-                  <p className="text-2xl font-black">{count ?? 0}</p>
-                  <p className="text-xs text-gray-400">aktivních</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-black">{verifiedCount}</p>
-                  <p className="text-xs text-gray-400">ověřených</p>
-                </div>
-                <div>
-                  <p className="text-2xl font-black">0</p>
-                  <p className="text-xs text-gray-400">skrytých rizik</p>
-                </div>
-              </div>
-            </div>
+            <Link href="/bezpecnost" className="hidden rounded-[20px] bg-black p-5 text-white lg:block hover:bg-gray-900 transition-colors">
+              <h2 className="mb-2 text-lg font-black">Jak se nenapálit</h2>
+              <ul className="space-y-1 text-sm text-gray-300">
+                <li>Neplaťte předem neznámým lidem.</li>
+                <li>Neklikejte na odkazy „kurýrních služeb“ z chatu.</li>
+                <li>Nejbezpečnější je osobní předání.</li>
+              </ul>
+              <p className="mt-3 text-xs font-bold text-[#CCFF00]">{count ?? 0} aktivních inzerátů · víc o bezpečnosti →</p>
+            </Link>
           </div>
 
           <form className="mt-7 grid gap-3 sm:grid-cols-[1fr_220px_auto_auto]" action="/">
@@ -178,7 +165,6 @@ export default async function Home({ searchParams }: HomeProps) {
                   location={listing.location_city ?? ""}
                   image={listing.images?.[0]}
                   isBoosted={listing.is_boosted}
-                  neklikniVerdict={listing.neklikni_verdict ?? undefined}
                 />
               ))}
             </div>

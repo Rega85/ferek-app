@@ -22,11 +22,9 @@ type Conversation = {
   } | null;
   buyer: {
     full_name: string | null;
-    email: string | null;
   } | null;
   seller: {
     full_name: string | null;
-    email: string | null;
   } | null;
 };
 
@@ -50,8 +48,8 @@ export default async function ConversationPage({
       buyer_id,
       seller_id,
       listing:listings(id,title,price,images),
-      buyer:users!conversations_buyer_id_fkey(full_name,email),
-      seller:users!conversations_seller_id_fkey(full_name,email)
+      buyer:users!conversations_buyer_id_fkey(full_name),
+      seller:users!conversations_seller_id_fkey(full_name)
     `)
     .eq("id", id)
     .single();
@@ -90,7 +88,7 @@ export default async function ConversationPage({
                   {conversation.listing?.title ?? "Inzerát"}
                 </Link>
                 <p className="text-sm text-gray-500">
-                  Konverzace s {otherPerson?.full_name || otherPerson?.email || "uživatelem"}
+                  Konverzace s {otherPerson?.full_name || "uživatelem"}
                 </p>
               </div>
             </header>

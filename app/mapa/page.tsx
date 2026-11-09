@@ -10,7 +10,6 @@ type Listing = {
   location_city: string | null;
   images: string[] | null;
   is_boosted: boolean;
-  neklikni_verdict: "safe" | "warning" | "danger" | null;
 };
 
 type MapPageProps = {
@@ -29,7 +28,7 @@ export default async function MapPage({ searchParams }: MapPageProps) {
   const supabase = await createClient();
   let query = supabase
     .from("listings")
-    .select("id,title,price,location_city,images,is_boosted,neklikni_verdict")
+    .select("id,title,price,location_city,images,is_boosted")
     .eq("status", "active")
     .order("created_at", { ascending: false })
     .limit(48);
@@ -130,7 +129,6 @@ export default async function MapPage({ searchParams }: MapPageProps) {
                   location={listing.location_city ?? ""}
                   image={listing.images?.[0]}
                   isBoosted={listing.is_boosted}
-                  neklikniVerdict={listing.neklikni_verdict ?? undefined}
                 />
               ))}
             </div>

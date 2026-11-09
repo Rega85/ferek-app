@@ -8,19 +8,19 @@ export const metadata = {
 const faqs = [
   {
     q: "Jak přidám inzerát?",
-    a: 'Klikněte na tlačítko "Začít prodávat" na hlavní stránce. Vyfoťte zboží, přidejte popis a cenu. Inzerát bude automaticky ověřen technologií Neklikni a publikován.',
+    a: 'Klikněte na tlačítko "Začít prodávat" na hlavní stránce. Vyfoťte zboží, přidejte popis a cenu. Kontaktní údaje v inzerátu zkontrolujeme v databázi Neklikni.cz a inzerát zveřejníme.',
   },
   {
     q: "Je Férek zdarma?",
-    a: "Ano, základní inzerování na Férek je zcela zdarma. V budoucnu plánujeme prémiové funkce (zvýraznění inzerátu, prioritní ověření), které budou za poplatek.",
+    a: "Ano, základní inzerování na Férek je zcela zdarma. Vložení inzerátu, nákup i prodej jsou zdarma. Za poplatek budou volitelné služby jako topování, zvýraznění inzerátu nebo štítek ověřeného prodejce.",
   },
   {
-    q: "Co je technologie Neklikni?",
-    a: "Neklikni je proprietární AI systém vyvinutý společností PK Virgine, s.r.o. Automaticky analyzuje inzeráty a detekuje podezřelé nabídky, kradené fotky a podvodné prodejce.",
+    q: "Co je Neklikni.cz?",
+    a: "Neklikni.cz je databáze nahlášených podvodných telefonů, účtů, e-mailů a webů, kterou provozuje stejná společnost jako Férek (PK Virgine, s.r.o.). Férek s ní porovnává údaje v inzerátech a zprávách.",
   },
   {
     q: "Co znamenají barevné štítky u inzerátů?",
-    a: 'Zelený štítek "Ověřeno" znamená, že inzerát prošel kontrolou. Žlutý upozorňuje na podezřelé prvky. Červený označuje pravděpodobný podvod — nedoporučujeme s takovým prodejcem komunikovat.',
+    a: 'Šedý štítek „Zkontrolováno“ znamená, že údaje v inzerátu nikdo na Neklikni.cz nenahlásil. Není to záruka poctivosti. Oranžový štítek znamená, že některý údaj už někdo nahlásil, takže buďte opatrní a neplaťte předem. Podrobnosti najdete na stránce Bezpečnost.',
   },
   {
     q: "Jak probíhá komunikace s prodejcem?",
@@ -28,15 +28,15 @@ const faqs = [
   },
   {
     q: "Mohu si stěžovat na inzerát?",
-    a: "Ano. U každého inzerátu najdete možnost nahlásit nevhodný obsah. Náš tým každé nahlášení prověří a v případě porušení pravidel inzerát odstraní.",
+    a: "Ano. Napište nám odkaz na inzerát a důvod. Každé nahlášení prověříme a v případě porušení pravidel inzerát odstraníme.",
   },
   {
     q: "Jak smažu svůj účet?",
-    a: 'V nastavení profilu najdete možnost "Smazat účet". Vaše osobní údaje budou do 30 dnů odstraněny, s výjimkou údajů, které jsme povinni uchovávat ze zákona.',
+    a: 'Napište nám z e-mailu, se kterým jste registrovaní. Vaše osobní údaje do 30 dnů odstraníme, s výjimkou údajů, které jsme povinni uchovávat ze zákona.',
   },
   {
-    q: "Neklikni mi označil můj inzerát jako podezřelý. Co mám dělat?",
-    a: "Zkontrolujte, zda inzerát neobsahuje prvky, které by mohly vypadat podezřele (příliš nízká cena, neobvyklý popis). Upravte inzerát a systém ho automaticky přehodnotí. Pokud si myslíte, že se jedná o chybu, kontaktujte nás.",
+    q: "Můj inzerát čeká na kontrolu nebo má oranžový štítek. Co mám dělat?",
+    a: "Znamená to, že některý údaj z inzerátu (telefon, účet, odkaz) už někdo nahlásil na Neklikni.cz. Může jít o omyl nebo zneužité číslo. Napište nám a údaj prověříme ručně.",
   },
 ];
 

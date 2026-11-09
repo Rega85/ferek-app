@@ -12,10 +12,6 @@ type Listing = {
   location_city: string | null;
   status: string;
   images: string[] | null;
-  neklikni_score: number | null;
-  neklikni_verdict: "safe" | "warning" | "danger" | null;
-  neklikni_flags: string[] | null;
-  neklikni_checked_at: string | null;
   created_at: string;
 };
 
@@ -26,12 +22,6 @@ type Seller = {
   trust_score: number;
   is_verified: boolean;
   created_at: string;
-};
-
-const verdictConfig = {
-  safe: { label: "Ověřeno", className: "bg-green-500 text-white", note: "Inzerát prošel základní bezpečnostní kontrolou." },
-  warning: { label: "Opatrně", className: "bg-yellow-400 text-slate-950", note: "Neklikni našel signály, které stojí za kontrolu." },
-  danger: { label: "Riziko", className: "bg-red-500 text-white", note: "U tohoto inzerátu doporučujeme zvýšenou opatrnost." },
 };
 
 export default async function ListingPage({
@@ -65,11 +55,10 @@ export default async function ListingPage({
   const mainImage = listing.images?.[0];
   const allImages = listing.images ?? [];
   const date = new Date(listing.created_at).toLocaleDateString("cs-CZ");
-  const verdict = listing.neklikni_verdict ? verdictConfig[listing.neklikni_verdict] : null;
   const isOwner = user?.id === listing.user_id;
   const sellerName = seller?.full_name || "Uživatel Ferek";
   const sellerInitial = sellerName[0]?.toUpperCase() || "U";
-  const mapQuery = `${listing.location_city || "Česko"} ${listing.title}`;
+  const mapQuery = listing.location_city ? `${listing.location_city}, Česko` : "Česko";
 
   return (
     <main className="min-h-screen bg-gray-50">
@@ -93,13 +82,6 @@ export default async function ListingPage({
                   <div className="w-full h-full flex flex-col items-center justify-center text-gray-400">
                     <span className="text-6xl mb-2">+</span>
                     <span className="font-medium">Bez fotky</span>
-                  </div>
-                )}
-                {verdict && (
-                  <div className="absolute top-4 left-4">
-                    <span className={`px-4 py-2 rounded-md font-bold text-sm shadow-lg ${verdict.className}`}>
-                      {verdict.label}
-                    </span>
                   </div>
                 )}
               </div>
@@ -142,9 +124,9 @@ export default async function ListingPage({
                 </div>
                 <div>
                   <p className="font-bold text-gray-900">{sellerName}</p>
-                  <p className="text-xs text-gray-500">
-                    Trust score {seller?.trust_score ?? 50}/100 {seller?.is_verified ? "• ověřený prodejce" : ""}
-                  </p>
+                  {seller?.is_verified ? (
+                    <p className="text-xs font-bold text-green-700">Ověřený prodejce</p>
+                  ) : null}
                 </div>
               </div>
 
@@ -174,26 +156,12 @@ export default async function ListingPage({
             </section>
 
             <section className="bg-white rounded-lg border border-gray-100 shadow-sm p-6">
-              <div className="flex items-center justify-between mb-3">
-                <h2 className="font-black text-lg">Kontrola Neklikni</h2>
-                <span className="text-2xl font-black">{listing.neklikni_score ?? "-"}</span>
-              </div>
-              <p className="text-sm text-gray-500 mb-4">
-                {verdict?.note ?? "Inzerát zatím čeká na kontrolu."}
-              </p>
-              {listing.neklikni_flags && listing.neklikni_flags.length > 0 ? (
-                <ul className="space-y-2">
-                  {listing.neklikni_flags.map((flag) => (
-                    <li key={flag} className="text-sm bg-amber-50 text-amber-800 border border-amber-100 rounded-md px-3 py-2">
-                      {flag}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-sm bg-green-50 text-green-700 border border-green-100 rounded-md px-3 py-2">
-                  Bez zjevných rizik v základní kontrole.
-                </p>
-              )}
+              <h2 className="font-black text-lg mb-3">Jak se nenapálit</h2>
+              <ul className="space-y-2 text-sm text-gray-600 list-disc pl-5">
+                <li>Neplaťte předem, pokud prodejce neznáte. Nejbezpečnější je osobní předání.</li>
+                <li>Neklikejte na odkazy na „kurýra“ nebo „platební bránu“, které vám někdo pošle v chatu.</li>
+                <li>Telefon, účet nebo odkaz si můžete prověřit na <a href="https://www.neklikni.cz" target="_blank" rel="noopener noreferrer" className="font-bold underline">Neklikni.cz</a>.</li>
+              </ul>
             </section>
 
             <section className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
